@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DaD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lin.dao.GarbageSiteMapper" >
+	<resultMap id="GarbageSiteResultMap" type="com.lin.dao.GarbageSiteDao" >
+		<result column="gs_id" property="gsId" jdbcType="INTEGER" />
+		<result column="gs_location" property="gsLocation" jdbcType="VARCHAR" />
+		<result column="gs_phone" property="gsPhone" jdbcType="VARCHAR" />
+		<result column="gs_leader" property="gsLeader" jdbcType="VARCHAR" />
+		<result column="gs_status" property="gsStatus" jdbcType="VARCHAR" />
+	</resultMap>
+</mapper>

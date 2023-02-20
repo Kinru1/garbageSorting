@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DaD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lin.dao.GarbageSortingInfoMapper" >
+	<resultMap id="GarbageSortingInfoResultMap" type="com.lin.dao.GarbageSortingInfoDao" >
+		<result column="gs_total_recyclable" property="gsTotalRecyclable" jdbcType="DOUBLE" />
+		<result column="gs_total_other" property="gsTotalOther" jdbcType="DOUBLE" />
+		<result column="gs_total_kitchen" property="gsTotalKitchen" jdbcType="DOUBLE" />
+		<result column="gs_total_hazardous" property="gsTotalHazardous" jdbcType="DOUBLE" />
+		<result column="gs_id" property="gsId" jdbcType="INTEGER" />
+	</resultMap>
+</mapper>

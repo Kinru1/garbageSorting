@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DaD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lin.dao.TenantMapper" >
+	<resultMap id="TenantResultMap" type="com.lin.dao.TenantDao" >
+		<result column="tenant_id" property="tenantId" jdbcType="INTEGER" />
+		<result column="tenant_location" property="tenantLocation" jdbcType="VARCHAR" />
+		<result column="tenant_community" property="tenantCommunity" jdbcType="VARCHAR" />
+		<result column="tenant_ower" property="tenantOwer" jdbcType="VARCHAR" />
+	</resultMap>
+</mapper>
