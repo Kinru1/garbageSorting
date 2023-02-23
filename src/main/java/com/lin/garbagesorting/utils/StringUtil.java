@@ -7,9 +7,7 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by 伟浩 on 2014/10/2.
- */
+
 public class StringUtil extends org.apache.commons.lang3.StringUtils {
     public StringUtil() {
     }

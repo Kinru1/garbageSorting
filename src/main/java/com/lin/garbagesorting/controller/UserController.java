@@ -114,5 +114,9 @@ public class UserController {
         }
         return R.error("没有查到对应用户");
     }
+    @RequestMapping("/hello")
+    public String hello(){
+        return "1";
+    }
 
 }
