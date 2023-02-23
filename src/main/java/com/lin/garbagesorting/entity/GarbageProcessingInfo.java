@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -28,7 +29,7 @@ public class GarbageProcessingInfo  implements Serializable {
 	private String gpSite;
 
 	@ApiModelProperty(value="处理日期", hidden=false, required=false, dataType="Date", example = "")
-	private Date gpDay;
+	private LocalDateTime gpDay;
 
 	@ApiModelProperty(value="垃圾总量", hidden=false, required=false, dataType="null", example = "")
 	private double gpTotal;
@@ -36,45 +37,7 @@ public class GarbageProcessingInfo  implements Serializable {
 	@ApiModelProperty(value="", hidden=false, required=false, dataType="Integer", example = "")
 	private Integer gpGsId;
 
-	public void setGpId(Integer gpId){
-		this.gpId = gpId;
-	}
-	public Integer getGpId(){
-		return gpId;
-	}
-	public void setGpComunity(String gpComunity){
-		this.gpComunity = gpComunity;
-	}
-	public String getGpComunity(){
-		return gpComunity;
-	}
-	public void setGpSite(String gpSite){
-		this.gpSite = gpSite;
-	}
-	public String getGpSite(){
-		return gpSite;
-	}
-	public void setGpDay(Date gpDay){
-		this.gpDay = gpDay;
-	}
-	public Date getGpDay(){
-		return gpDay;
-	}
-	public void setGpTotal(double gpTotal){
-		this.gpTotal = gpTotal;
-	}
-	public double getGpTotal(){
-		return gpTotal;
-	}
-	public void setGpGsId(Integer gpGsId){
-		this.gpGsId = gpGsId;
-	}
-	public Integer getGpGsId(){
-		return gpGsId;
-	}
-	public GarbageProcessingInfo(){
-		super();
-	}
+
 	@Override
 	public String toString() {
 		return "GarbageProcessingInfo{" +

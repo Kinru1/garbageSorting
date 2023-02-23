@@ -1,19 +1,24 @@
 package com.lin.garbagesorting.entity;
 
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import lombok.ToString;
 
 import java.io.Serializable;
-
-import java.util.Date;
-
+import java.time.LocalDateTime;
 
 
+@Data
+@ToString
 @ApiModel(value="")
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private long id;
 
 	@ApiModelProperty(value="姓名", hidden=false, required=true, dataType="String", example = "")
 	private String name;
@@ -33,89 +38,25 @@ public class User implements Serializable {
 	@ApiModelProperty(value="状态：1为正常 2为禁用", hidden=false, required=true, dataType="Integer", example = "")
 	private Integer status;
 
+	@TableField(fill = FieldFill.INSERT) //插入时填充字段
 	@ApiModelProperty(value="创建时间", hidden=false, required=true, dataType="Date", example = "")
-	private Date createTime;
+	private LocalDateTime createTime;
 
+	@TableField(fill = FieldFill.INSERT_UPDATE) //插入和更新时填充字段
 	@ApiModelProperty(value="更新时间", hidden=false, required=true, dataType="Date", example = "")
-	private Date updateTime;
+	private LocalDateTime updateTime;
 
+	@TableField(fill = FieldFill.INSERT) //插入时填充字段
 	@ApiModelProperty(value="创建者", hidden=false, required=true, dataType="Integer", example = "")
-	private Integer createUser;
+	private Long createUser;
 
+	@TableField(fill = FieldFill.INSERT_UPDATE) //插入和更新时填充字段
 	@ApiModelProperty(value="更新者", hidden=false, required=true, dataType="Integer", example = "")
-	private Integer updateUser;
+	private Long updateUser;
 
 	@ApiModelProperty(value="类型 1为普通用户 2为物业 3为管理人员", hidden=false, required=true, dataType="Integer", example = "")
 	private Integer type;
 
-	public void setName(String name){
-		this.name = name;
-	}
-	public String getName(){
-		return name;
-	}
-	public void setUsername(String username){
-		this.username = username;
-	}
-	public String getUsername(){
-		return username;
-	}
-	public void setPassword(String password){
-		this.password = password;
-	}
-	public String getPassword(){
-		return password;
-	}
-	public void setPhone(String phone){
-		this.phone = phone;
-	}
-	public String getPhone(){
-		return phone;
-	}
-	public void setSex(String sex){
-		this.sex = sex;
-	}
-	public String getSex(){
-		return sex;
-	}
-	public void setStatus(Integer status){
-		this.status = status;
-	}
-	public Integer getStatus(){
-		return status;
-	}
-	public void setCreateTime(Date createTime){
-		this.createTime = createTime;
-	}
-	public Date getCreateTime(){
-		return createTime;
-	}
-	public void setUpdateTime(Date updateTime){
-		this.updateTime = updateTime;
-	}
-	public Date getUpdateTime(){
-		return updateTime;
-	}
-	public void setCreateUser(Integer createUser){
-		this.createUser = createUser;
-	}
-	public Integer getCreateUser(){
-		return createUser;
-	}
-	public void setUpdateUser(Integer updateUser){
-		this.updateUser = updateUser;
-	}
-	public Integer getUpdateUser(){
-		return updateUser;
-	}
-	public void setType(Integer type){
-		this.type = type;
-	}
-	public Integer getType(){
-		return type;
-	}
-	public User(){
-		super();
-	}
+
 
 }

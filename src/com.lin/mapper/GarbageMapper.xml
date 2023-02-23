@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DaD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.lin.dao.GarbageMapper" >
-	<resultMap id="GarbageResultMap" type="com.lin.dao.GarbageDao" >
-		<result column="garbage_id" property="garbageId" jdbcType="INTEGER" />
-		<result column="garbage_name" property="garbageName" jdbcType="VARCHAR" />
-		<result column="garbage_type" property="garbageType" jdbcType="VARCHAR" />
-	</resultMap>
-</mapper>

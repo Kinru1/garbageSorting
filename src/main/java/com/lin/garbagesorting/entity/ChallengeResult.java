@@ -2,9 +2,11 @@ package com.lin.garbagesorting.entity;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.io.Serializable;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -12,7 +14,7 @@ import java.util.Date;
  */
 
 @ApiModel(value="")
-
+@Data
 public class ChallengeResult  implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -21,31 +23,11 @@ public class ChallengeResult  implements Serializable {
 	private Integer score;
 
 	@ApiModelProperty(value="挑战时间", hidden=false, required=false, dataType="Date", example = "")
-	private Date challengeTime;
+	private LocalDateTime challengeTime;
 
 	@ApiModelProperty(value="用户名", hidden=false, required=false, dataType="String", example = "")
 	private String username;
 
-	public void setScore(Integer score){
-		this.score = score;
-	}
-	public Integer getScore(){
-		return score;
-	}
-	public void setChallengeTime(Date challengeTime){
-		this.challengeTime = challengeTime;
-	}
-	public Date getChallengeTime(){
-		return challengeTime;
-	}
-	public void setUsername(String username){
-		this.username = username;
-	}
-	public String getUsername(){
-		return username;
-	}
-	public ChallengeResult(){
-		super();
-	}
+
 
 }
