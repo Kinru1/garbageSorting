@@ -4,7 +4,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -19,22 +18,22 @@ public class JwtUtils {
 
     /**
      * 生成token字符串的方法
-     * @param id
-     * @param nickname
+     * @param type
+     * @param username
      * @return
      */
-    public static String getJwtToken(String id,String nickname){
+    public static String getJwtToken(String username,int type){
         String JwtToken = Jwts.builder()
                 //JWT头信息
                 .setHeaderParam("typ", "JWT")
-                .setHeaderParam("alg", "HS2256")
+                .setHeaderParam("alg", "HS256")
                 //设置分类；设置过期时间 一个当前时间，一个加上设置的过期时间常量
                 .setSubject("lin-user")
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRE))
                 //设置token主体信息，存储用户信息
-                .claim("id", id)
-                .claim("nickname", nickname)
+                .claim("username", username)
+                .claim("type", type)
                 //.signWith(SignatureAlgorithm.ES256, SECRET)
                 .signWith(SignatureAlgorithm.HS256, SECRET)
                 .compact();
@@ -78,16 +77,16 @@ public class JwtUtils {
     }
 
     /**
-     * 根据token获取会员id
+     * 根据token获取username
 
      */
-    public static String getMemberIdByJwtToken(HttpServletRequest request){
+    public static String getUsernameByJwtToken(HttpServletRequest request){
         String token = request.getHeader("token");
         if (StringUtil.isEmpty(token)){
             return "";
         }
         Jws<Claims> claimsJws = Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token);
         Claims body = claimsJws.getBody();
-        return (String) body.get("id");
+        return (String) body.get("username");
     }
 }
