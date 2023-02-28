@@ -33,7 +33,8 @@ public class LoginController {
         int isDisabled = user.getStatus();
         System.out.println(user);
 
-        return JwtUtils.getJwtToken(user.getUsername(),user.getType());
+        //return JwtUtils.getJwtToken(user.getUsername(),user.getType());
+        return null;
     }
 
 

@@ -1,5 +1,7 @@
 package com.lin.garbagesorting.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -17,38 +19,32 @@ public class Community  implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@ApiModelProperty(value="", hidden=false, required=true, dataType="Integer", example = "")
+	@ApiModelProperty(value="小区ID", hidden=false, required=true, dataType="Integer", example = "")
 	private Integer comId;
 
-	@ApiModelProperty(value="", hidden=false, required=false, dataType="String", example = "")
+	@ApiModelProperty(value="小区名", hidden=false, required=false, dataType="String", example = "")
 	private String comName;
 
-	@ApiModelProperty(value="", hidden=false, required=false, dataType="String", example = "")
+	@ApiModelProperty(value="小区地址", hidden=false, required=false, dataType="String", example = "")
 	private String comPlace;
 
-	@ApiModelProperty(value="", hidden=false, required=false, dataType="Integer", example = "")
+	@ApiModelProperty(value="小区负责人", hidden=false, required=false, dataType="Integer", example = "")
 	private Integer comAdmin;
 
-	@ApiModelProperty(value="", hidden=false, required=false, dataType="Integer", example = "")
+	@ApiModelProperty(value="小区电话", hidden=false, required=false, dataType="Integer", example = "")
 	private Integer comPhone;
 
-	@ApiModelProperty(value="", hidden=false, required=false, dataType="Date", example = "")
+	@ApiModelProperty(value="创建时间", hidden=false, required=false, dataType="Date", example = "")
 	private LocalDateTime createTime;
 
-	@ApiModelProperty(value="", hidden=false, required=false, dataType="Date", example = "")
+	@ApiModelProperty(value="修改时间", hidden=false, required=false, dataType="Date", example = "")
 	private LocalDateTime updateTime;
 
+	@TableId(value = "id", type = IdType.AUTO)
+	private Integer id;
 
-	@Override
-	public String toString() {
-		return "Community{" +
-				"comId=" + comId + ", " + 
-				"comName=" + comName + ", " + 
-				"comPlace=" + comPlace + ", " + 
-				"comAdmin=" + comAdmin + ", " + 
-				"comPhone=" + comPhone + ", " + 
-				"createTime=" + createTime + ", " + 
-				"updateTime=" + updateTime + 
-				'}';
-	}
+	@ApiModelProperty(value="是否删除", hidden=false, required=false, dataType="Date", example = "")
+	private int delete;
+
+
 }

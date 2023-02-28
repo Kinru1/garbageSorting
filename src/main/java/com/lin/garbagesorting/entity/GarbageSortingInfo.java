@@ -1,5 +1,7 @@
 package com.lin.garbagesorting.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -27,5 +29,9 @@ public class GarbageSortingInfo implements Serializable {
 	@ApiModelProperty(value="", hidden=false, required=false, dataType="Integer", example = "")
 	private Integer gsId;
 
+	@TableId(value = "id", type = IdType.AUTO)
+	private Integer id;
 
+	@ApiModelProperty(value="是否删除", hidden=false, required=false, dataType="Date", example = "")
+	private int delete;
 }

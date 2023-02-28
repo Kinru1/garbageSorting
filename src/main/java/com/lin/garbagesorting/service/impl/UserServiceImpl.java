@@ -27,35 +27,35 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
 //        return new PageInfo<>(policeMapper.selectByExample(example));
 //    }
 
-    @Override
-    public String login( loginvo) {
-        //获取账号和密码
-        String username = loginvo.getUsername();
-        String password = loginvo.getPassword();
-        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
-            throw new MyException(20010, "账号和密码不能为空!");
-        }
-        //判断账号和密码是否存在
-        QueryWrapper<LoginVo> wrapper = new QueryWrapper<>();
-        wrapper.eq("username", username);
-        LoginVo loginvo = baseMapper.selectOne(wrapper);
-        if (ObjectUtils.isEmpty(ucenterMember)) {
-            throw new MyException(20011, "账号不存在，请重新输入!");
-        }
-        //判断该用户是否被禁用
-        Boolean isDisabled = ucenterMember.getIsDisabled();
-        if (isDisabled) {
-            throw new MyException(20013, "该账号已禁用!");
-        }
-        //判断密码是否正确
-        //密码存储肯定是加密的，实际开发中数据库不会存储明文密码
-        //先将输入的密码加密，再和数据库密码比较
-        //MD5加密
-        if (!MD5.encrypt(password).equals(realPassword)) {
-            throw new MyException(20012, "密码错误，请重新输入!");
-        }
-        //登录成功,返回token(通过查出来的用户数据去生成token)
-        return JwtUtils.getJwtToken(ucenterMember.getId(), ucenterMember.getNickname());
-    }
+//    @Override
+//    public String login( loginvo) {
+//        //获取账号和密码
+//        String username = loginvo.getUsername();
+//        String password = loginvo.getPassword();
+//        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
+//            throw new MyException(20010, "账号和密码不能为空!");
+//        }
+//        //判断账号和密码是否存在
+//        QueryWrapper<LoginVo> wrapper = new QueryWrapper<>();
+//        wrapper.eq("username", username);
+//        LoginVo loginvo = baseMapper.selectOne(wrapper);
+//        if (ObjectUtils.isEmpty(ucenterMember)) {
+//            throw new MyException(20011, "账号不存在，请重新输入!");
+//        }
+//        //判断该用户是否被禁用
+//        Boolean isDisabled = ucenterMember.getIsDisabled();
+//        if (isDisabled) {
+//            throw new MyException(20013, "该账号已禁用!");
+//        }
+//        //判断密码是否正确
+//        //密码存储肯定是加密的，实际开发中数据库不会存储明文密码
+//        //先将输入的密码加密，再和数据库密码比较
+//        //MD5加密
+//        if (!MD5.encrypt(password).equals(realPassword)) {
+//            throw new MyException(20012, "密码错误，请重新输入!");
+//        }
+//        //登录成功,返回token(通过查出来的用户数据去生成token)
+//        return JwtUtils.getJwtToken(ucenterMember.getId(), ucenterMember.getNickname());
+//    }
 
 }

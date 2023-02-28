@@ -2,7 +2,9 @@ package com.lin.garbagesorting.entity;
 
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -18,7 +20,8 @@ import java.time.LocalDateTime;
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private long id;
+
+
 
 	@ApiModelProperty(value="姓名", hidden=false, required=true, dataType="String", example = "")
 	private String name;
@@ -57,6 +60,11 @@ public class User implements Serializable {
 	@ApiModelProperty(value="类型 1为普通用户 2为物业 3为管理人员", hidden=false, required=true, dataType="Integer", example = "")
 	private Integer type;
 
+	@TableId(value = "id", type = IdType.AUTO)
+	private Integer id;
+
+	@ApiModelProperty(value="是否删除", hidden=false, required=false, dataType="Date", example = "")
+	private int delete;
 
 
 }

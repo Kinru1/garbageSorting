@@ -1,14 +1,17 @@
 package com.lin.garbagesorting.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.io.Serializable;
 
 /**
  * Created by LGeneratorins on 2023/02/15 14:40
  */
-
+@Data
 @ApiModel(value="")
 public class Complain implements Serializable {
 
@@ -23,26 +26,10 @@ public class Complain implements Serializable {
 	@ApiModelProperty(value="电话号", hidden=false, required=false, dataType="Integer", example = "")
 	private Integer phone;
 
-	public void setType(String type){
-		this.type = type;
-	}
-	public String getType(){
-		return type;
-	}
-	public void setContent(String content){
-		this.content = content;
-	}
-	public String getContent(){
-		return content;
-	}
-	public void setPhone(Integer phone){
-		this.phone = phone;
-	}
-	public Integer getPhone(){
-		return phone;
-	}
-	public Complain(){
-		super();
-	}
+	@TableId(value = "id", type = IdType.AUTO)
+	private Integer id;
+
+	@ApiModelProperty(value="是否删除", hidden=false, required=false, dataType="Date", example = "")
+	private int delete;
 
 }

@@ -1,13 +1,16 @@
 package com.lin.garbagesorting.entity;
 
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 
 import java.io.Serializable;
 
-
+@Data
 @ApiModel(value="")
 
 public class Garbage  implements Serializable {
@@ -23,33 +26,11 @@ public class Garbage  implements Serializable {
 	@ApiModelProperty(value="垃圾类型", hidden=false, required=true, dataType="String", example = "")
 	private String garbageType;
 
-	public void setGarbageId(Integer garbageId){
-		this.garbageId = garbageId;
-	}
-	public Integer getGarbageId(){
-		return garbageId;
-	}
-	public void setGarbageName(String garbageName){
-		this.garbageName = garbageName;
-	}
-	public String getGarbageName(){
-		return garbageName;
-	}
-	public void setGarbageType(String garbageType){
-		this.garbageType = garbageType;
-	}
-	public String getGarbageType(){
-		return garbageType;
-	}
-	public Garbage(){
-		super();
-	}
-	@Override
-	public String toString() {
-		return "Garbage{" +
-				"garbageId=" + garbageId + ", " + 
-				"garbageName=" + garbageName + ", " + 
-				"garbageType=" + garbageType + 
-				'}';
-	}
+	@TableId(value = "id", type = IdType.AUTO)
+	private Integer id;
+
+	@ApiModelProperty(value="是否删除", hidden=false, required=false, dataType="Date", example = "")
+	private int delete;
+
+	private String img;
 }

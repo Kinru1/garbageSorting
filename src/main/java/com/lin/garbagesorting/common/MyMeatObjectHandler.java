@@ -24,9 +24,7 @@ public class MyMeatObjectHandler implements MetaObjectHandler {
     public void updateFill(MetaObject metaObject) {
         log.info("公共字段自动填充update");
         log.info(metaObject.toString());
-
         metaObject.setValue("updateTime", LocalDateTime.now());
-
         metaObject.setValue("updateUser", BaseContext.getCurrentId());
 
     }
