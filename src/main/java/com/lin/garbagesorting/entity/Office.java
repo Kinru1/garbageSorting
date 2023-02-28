@@ -2,12 +2,14 @@ package com.lin.garbagesorting.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.io.Serializable;
 
-
+@Data
 @ApiModel(value="")
 
 public class Office  implements Serializable {
@@ -23,49 +25,15 @@ public class Office  implements Serializable {
 	@ApiModelProperty(value="物业用户名", hidden=false, required=false, dataType="String", example = "")
 	private String ofUsername;
 
-	@ApiModelProperty(value="物业密码", hidden=false, required=false, dataType="String", example = "")
-	private String ofPassword;
+	@ApiModelProperty(value="物业所属小区", hidden=false, required=false, dataType="String", example = "")
+	private String ofCommunity;
 
 	@TableId(value = "id", type = IdType.AUTO)
 	private Integer id;
 
+	@TableLogic(value="0",delval="1")
 	@ApiModelProperty(value="是否删除", hidden=false, required=false, dataType="Date", example = "")
-	private int delete;
+	private int logDelete;
 
-	public void setOfId(Integer ofId){
-		this.ofId = ofId;
-	}
-	public Integer getOfId(){
-		return ofId;
-	}
-	public void setOfPhone(Integer ofPhone){
-		this.ofPhone = ofPhone;
-	}
-	public Integer getOfPhone(){
-		return ofPhone;
-	}
-	public void setOfUsername(String ofUsername){
-		this.ofUsername = ofUsername;
-	}
-	public String getOfUsername(){
-		return ofUsername;
-	}
-	public void setOfPassword(String ofPassword){
-		this.ofPassword = ofPassword;
-	}
-	public String getOfPassword(){
-		return ofPassword;
-	}
-	public Office(){
-		super();
-	}
-	@Override
-	public String toString() {
-		return "Office{" +
-				"ofId=" + ofId + ", " + 
-				"ofPhone=" + ofPhone + ", " + 
-				"ofUsername=" + ofUsername + ", " + 
-				"ofPassword=" + ofPassword + 
-				'}';
-	}
+
 }

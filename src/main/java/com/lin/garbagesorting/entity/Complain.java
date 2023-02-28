@@ -1,7 +1,9 @@
 package com.lin.garbagesorting.entity;
 
+import cn.hutool.core.annotation.Alias;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -29,7 +31,16 @@ public class Complain implements Serializable {
 	@TableId(value = "id", type = IdType.AUTO)
 	private Integer id;
 
+	@TableLogic(value="0",delval="1")
 	@ApiModelProperty(value="是否删除", hidden=false, required=false, dataType="Date", example = "")
-	private int delete;
+	private int logDelete;
 
+	// 投诉图片
+	@ApiModelProperty("投诉图片")
+	@Alias("投诉图片")
+	private String img;
+
+	// 投诉图片
+	@ApiModelProperty("投诉时间")
+	private String date;
 }

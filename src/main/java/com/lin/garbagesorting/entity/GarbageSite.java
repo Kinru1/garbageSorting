@@ -2,6 +2,7 @@ package com.lin.garbagesorting.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -19,7 +20,7 @@ public class GarbageSite implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@ApiModelProperty(value="", hidden=false, required=true, dataType="Integer", example = "")
+	@ApiModelProperty(value="站点ID", hidden=false, required=true, dataType="Integer", example = "")
 	private Integer gsId;
 
 	@ApiModelProperty(value="垃圾站点地址", hidden=false, required=false, dataType="String", example = "")
@@ -38,50 +39,10 @@ public class GarbageSite implements Serializable {
 	@TableId(value = "id", type = IdType.AUTO)
 	private Integer id;
 
+	@TableLogic(value="0",delval="1")
 	@ApiModelProperty(value="是否删除", hidden=false, required=false, dataType="Date", example = "")
-	private int delete;
+	private int logDelete;
 
-	public void setGsId(Integer gsId){
-		this.gsId = gsId;
-	}
-	public Integer getGsId(){
-		return gsId;
-	}
-	public void setGsLocation(String gsLocation){
-		this.gsLocation = gsLocation;
-	}
-	public String getGsLocation(){
-		return gsLocation;
-	}
-	public void setGsPhone(String gsPhone){
-		this.gsPhone = gsPhone;
-	}
-	public String getGsPhone(){
-		return gsPhone;
-	}
-	public void setGsLeader(String gsLeader){
-		this.gsLeader = gsLeader;
-	}
-	public String getGsLeader(){
-		return gsLeader;
-	}
-	public void setGsStatus(String gsStatus){
-		this.gsStatus = gsStatus;
-	}
-	public String getGsStatus(){
-		return gsStatus;
-	}
-	public GarbageSite(){
-		super();
-	}
-	@Override
-	public String toString() {
-		return "GarbageSite{" +
-				"gsId=" + gsId + ", " + 
-				"gsLocation=" + gsLocation + ", " + 
-				"gsPhone=" + gsPhone + ", " + 
-				"gsLeader=" + gsLeader + ", " + 
-				"gsStatus=" + gsStatus + 
-				'}';
-	}
+
+
 }

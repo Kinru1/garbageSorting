@@ -2,11 +2,13 @@ package com.lin.garbagesorting.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.io.Serializable;
-
+@Data
 @ApiModel(value="")
 public class Tenant implements Serializable {
 
@@ -27,42 +29,10 @@ public class Tenant implements Serializable {
 	@TableId(value = "id", type = IdType.AUTO)
 	private Integer id;
 
+	@TableLogic(value="0",delval="1")
 	@ApiModelProperty(value="是否删除", hidden=false, required=false, dataType="Date", example = "")
-	private int delete;
-	public void setTenantId(Integer tenantId){
-		this.tenantId = tenantId;
-	}
-	public Integer getTenantId(){
-		return tenantId;
-	}
-	public void setTenantLocation(String tenantLocation){
-		this.tenantLocation = tenantLocation;
-	}
-	public String getTenantLocation(){
-		return tenantLocation;
-	}
-	public void setTenantCommunity(String tenantCommunity){
-		this.tenantCommunity = tenantCommunity;
-	}
-	public String getTenantCommunity(){
-		return tenantCommunity;
-	}
-	public void setTenantOwer(String tenantOwer){
-		this.tenantOwer = tenantOwer;
-	}
-	public String getTenantOwer(){
-		return tenantOwer;
-	}
-	public Tenant(){
-		super();
-	}
-	@Override
-	public String toString() {
-		return "Tenant{" +
-				"tenantId=" + tenantId + ", " + 
-				"tenantLocation=" + tenantLocation + ", " + 
-				"tenantCommunity=" + tenantCommunity + ", " + 
-				"tenantOwer=" + tenantOwer + 
-				'}';
-	}
+	private int logDelete;
+
+
+
 }
