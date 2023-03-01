@@ -9,6 +9,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lin.garbagesorting.common.R;
 import com.lin.garbagesorting.entity.Office;
 import com.lin.garbagesorting.service.OfficeService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,7 +21,7 @@ import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.List;
 
-
+@Api(tags = "物业管理")
 @RestController
 @RequestMapping("/office")
 public class OfficeController {
@@ -27,7 +29,7 @@ public class OfficeController {
     @Resource
     private OfficeService officeService;
 
-    
+    @ApiOperation(value = "新增物业", notes = "新增物业")
     @PostMapping
     @SaCheckPermission("office.add")
     public R save(@RequestBody Office office) {
@@ -41,6 +43,7 @@ public class OfficeController {
     }
 
 
+    @ApiOperation(value = "修改物业", notes = "修改物业")
     @PutMapping
     @SaCheckPermission("office.edit")
     public R update(@RequestBody Office office) {
@@ -48,6 +51,7 @@ public class OfficeController {
         return R.success();
     }
 
+    @ApiOperation(value = "删除物业", notes = "删除物业")
     @DeleteMapping("/{id}")
     @SaCheckPermission("office.delete")
     public R delete(@PathVariable Integer id) {
@@ -55,7 +59,7 @@ public class OfficeController {
         return R.success();
     }
 
-
+    @ApiOperation(value = "删除物业", notes = "删除物业")
     @PostMapping("/del/batch")
     @SaCheckPermission("office.deleteBatch")
     public R deleteBatch(@RequestBody List<Integer> ids) {
@@ -63,31 +67,34 @@ public class OfficeController {
         return R.success();
     }
 
+
+    @ApiOperation(value = "查询所有物业", notes = "查询所有物业")
     @GetMapping
     @SaCheckPermission("office.list")
     public R findAll() {
         return R.success(officeService.list());
     }
 
+    @ApiOperation(value = "根据ID查询物业", notes = "根据ID查询物业")
     @GetMapping("/{id}")
     @SaCheckPermission("office.list")
     public R findOne(@PathVariable Integer id) {
         return R.success(officeService.getById(id));
     }
 
+    @ApiOperation(value = "分页查询物业", notes = "分页查询物业")
     @GetMapping("/page")
     @SaCheckPermission("office.list")
     public R findPage(@RequestParam(defaultValue = "") String name,
                            @RequestParam Integer pageNum,
                            @RequestParam Integer pageSize) {
         QueryWrapper<Office> queryWrapper = new QueryWrapper<Office>().orderByDesc("id");
+        //模糊查询
         queryWrapper.like(!"".equals(name), "name", name);
         return R.success(officeService.page(new Page<>(pageNum, pageSize), queryWrapper));
     }
 
-    /**
-    * 导出接口
-    */
+    @ApiOperation(value = "导出所有物业", notes = "导出所有物业")
     @GetMapping("/export")
     @SaCheckPermission("office.export")
     public void export(HttpServletResponse response) throws Exception {
@@ -116,6 +123,7 @@ public class OfficeController {
     * @param file
     * @throws Exception
     */
+    @ApiOperation(value = "根据EXCEL导入物业", notes = "根据EXCEL导入物业")
     @PostMapping("/import")
     @SaCheckPermission("office.import")
     public R imp(MultipartFile file) throws Exception {

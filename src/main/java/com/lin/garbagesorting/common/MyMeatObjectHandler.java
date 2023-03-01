@@ -14,10 +14,8 @@ public class MyMeatObjectHandler implements MetaObjectHandler {
     public void insertFill(MetaObject metaObject) {
         log.info("公共字段自动填充insert");
         log.info(metaObject.toString());
-        metaObject.setValue("createTime", LocalDateTime.now());
-        metaObject.setValue("updateTime", LocalDateTime.now());
-        metaObject.setValue("createUser",BaseContext.getCurrentId());
-        metaObject.setValue("updateUser", BaseContext.getCurrentId());
+        this.strictInsertFill(metaObject, "createTime", LocalDateTime::now, LocalDateTime.class);
+        this.strictUpdateFill(metaObject, "updateTime", LocalDateTime::now, LocalDateTime.class);
     }
 
     @Override
@@ -25,7 +23,6 @@ public class MyMeatObjectHandler implements MetaObjectHandler {
         log.info("公共字段自动填充update");
         log.info(metaObject.toString());
         metaObject.setValue("updateTime", LocalDateTime.now());
-        metaObject.setValue("updateUser", BaseContext.getCurrentId());
 
     }
 }

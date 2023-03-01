@@ -33,7 +33,7 @@ public class GarbageSite implements Serializable {
 	private String gsLeader;
 
 	@ApiModelProperty(value="垃圾站点状态：1为正常 0为关闭", hidden=false, required=false, dataType="String", example = "")
-	private String gsStatus;
+	private int gsStatus;
 
 
 	@TableId(value = "id", type = IdType.AUTO)

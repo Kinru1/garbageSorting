@@ -1,18 +1,14 @@
 package com.lin.garbagesorting.entity;
 
 import cn.hutool.core.annotation.Alias;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
 
-/**
- * Created by LGeneratorins on 2023/02/15 14:40
- */
+
 @Data
 @ApiModel(value="")
 public class Complain implements Serializable {
@@ -28,6 +24,9 @@ public class Complain implements Serializable {
 	@ApiModelProperty(value="电话号", hidden=false, required=false, dataType="Integer", example = "")
 	private Integer phone;
 
+	@ApiModelProperty(value="投诉ID", hidden=false, required=false, dataType="Integer", example = "")
+	private Integer complainId;
+
 	@TableId(value = "id", type = IdType.AUTO)
 	private Integer id;
 
@@ -41,6 +40,7 @@ public class Complain implements Serializable {
 	private String img;
 
 	// 投诉图片
+	@TableField(fill = FieldFill.INSERT) //插入和更新时填充字段
 	@ApiModelProperty("投诉时间")
 	private String date;
 }

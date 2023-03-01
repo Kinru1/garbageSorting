@@ -9,7 +9,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import com.lin.garbagesorting.common.R;
 import com.lin.garbagesorting.entity.Tenant;
+import com.lin.garbagesorting.entity.User;
 import com.lin.garbagesorting.service.TenantService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,15 +23,16 @@ import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.List;
 
-
+@Api(tags = "业主管理")
 @RestController
 @RequestMapping("/tenant")
+
 public class TenantController {
 
     @Resource
     private TenantService tenantService;
 
-
+    @ApiOperation(value = "新增业主", notes = "新增业主")
     @PostMapping
     @SaCheckPermission("tenant.add")
     public R save(@RequestBody Tenant tenant) {
@@ -42,6 +46,7 @@ public class TenantController {
     }
 
 
+    @ApiOperation(value = "修改业主", notes = "修改业主")
     @PutMapping
     @SaCheckPermission("tenant.edit")
     public R update(@RequestBody Tenant tenant) {
@@ -49,7 +54,7 @@ public class TenantController {
         return R.success();
     }
 
-
+    @ApiOperation(value = "删除业主", notes = "删除业主")
     @DeleteMapping("/{id}")
     @SaCheckPermission("tenant.delete")
     public R delete(@PathVariable Integer id) {
@@ -57,7 +62,7 @@ public class TenantController {
         return R.success();
     }
 
-
+    @ApiOperation(value = "批量删除业主", notes = "批量删除业主")
     @PostMapping("/del/batch")
     @SaCheckPermission("tenant.deleteBatch")
     public R deleteBatch(@RequestBody List<Integer> ids) {
@@ -65,31 +70,35 @@ public class TenantController {
         return R.success();
     }
 
+
+    @ApiOperation(value = "查询所有业主", notes = "查询所有业主")
     @GetMapping
     @SaCheckPermission("tenant.list")
     public R findAll() {
         return R.success(tenantService.list());
     }
 
+
+    @ApiOperation(value = "根据ID查询业主", notes = "根据ID查询业主")
     @GetMapping("/{id}")
     @SaCheckPermission("tenant.list")
     public R findOne(@PathVariable Integer id) {
         return R.success(tenantService.getById(id));
     }
 
+    @ApiOperation(value = "分页查询业主", notes = "分页查询业主")
     @GetMapping("/page")
     @SaCheckPermission("tenant.list")
     public R findPage(@RequestParam(defaultValue = "") String name,
                            @RequestParam Integer pageNum,
                            @RequestParam Integer pageSize) {
         QueryWrapper<Tenant> queryWrapper = new QueryWrapper<Tenant>().orderByDesc("id");
+        //模糊查询
         queryWrapper.like(!"".equals(name), "name", name);
         return R.success(tenantService.page(new Page<>(pageNum, pageSize), queryWrapper));
     }
 
-    /**
-    * 导出接口
-    */
+    @ApiOperation(value = "导出所有业主", notes = "导出所有业主")
     @GetMapping("/export")
     @SaCheckPermission("tenant.export")
     public void export(HttpServletResponse response) throws Exception {
@@ -118,6 +127,7 @@ public class TenantController {
     * @param file
     * @throws Exception
     */
+    @ApiOperation(value = "根据EXCEL导入业主", notes = "根据EXCEL导入业主")
     @PostMapping("/import")
     @SaCheckPermission("tenant.import")
     public R imp(MultipartFile file) throws Exception {

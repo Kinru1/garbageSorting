@@ -9,6 +9,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lin.garbagesorting.common.R;
 import com.lin.garbagesorting.entity.Garbage;
 import com.lin.garbagesorting.service.GarbageService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.List;
-
+@Api(tags = "垃圾管理")
 @RestController
 @RequestMapping("/garbage")
 public class GarbageController {
@@ -27,6 +29,7 @@ public class GarbageController {
     private GarbageService garbageService;
 
 
+    @ApiOperation(value = "新增垃圾", notes = "新增垃圾")
     @PostMapping
     @SaCheckPermission("garbage.add")
     public R save(@RequestBody Garbage garbage) {
@@ -39,6 +42,7 @@ public class GarbageController {
         return R.success();
     }
 
+    @ApiOperation(value = "修改垃圾", notes = "修改垃圾")
     @PutMapping
     @SaCheckPermission("garbage.edit")
     public R update(@RequestBody Garbage garbage) {
@@ -46,7 +50,7 @@ public class GarbageController {
         return R.success();
     }
 
-
+    @ApiOperation(value = "精准查询垃圾", notes = "精准查询垃圾")
     @DeleteMapping("/{id}")
     @SaCheckPermission("garbage.delete")
     public R delete(@PathVariable Integer id) {
@@ -54,7 +58,7 @@ public class GarbageController {
         return R.success();
     }
 
-
+    @ApiOperation(value = "批量删除垃圾", notes = "批量删除垃圾")
     @PostMapping("/del/batch")
     @SaCheckPermission("garbage.deleteBatch")
     public R deleteBatch(@RequestBody List<Integer> ids) {
@@ -62,18 +66,21 @@ public class GarbageController {
         return R.success();
     }
 
+    @ApiOperation(value = "所有垃圾", notes = "所有垃圾")
     @GetMapping
     @SaCheckPermission("garbage.list")
     public R findAll() {
         return R.success(garbageService.list());
     }
 
+    @ApiOperation(value = "精准查询垃圾", notes = "精准查询垃圾")
     @GetMapping("/{id}")
     @SaCheckPermission("garbage.list")
     public R findOne(@PathVariable Integer id) {
         return R.success(garbageService.getById(id));
     }
 
+    @ApiOperation(value = "分页查询垃圾", notes = "分页查询垃圾")
     @GetMapping("/page")
     @SaCheckPermission("garbage.list")
     public R findPage(@RequestParam(defaultValue = "") String name,
@@ -84,9 +91,8 @@ public class GarbageController {
         return R.success(garbageService.page(new Page<>(pageNum, pageSize), queryWrapper));
     }
 
-    /**
-    * 导出接口
-    */
+
+    @ApiOperation(value = "导出垃圾", notes = "导出垃圾")
     @GetMapping("/export")
     @SaCheckPermission("garbage.export")
     public void export(HttpServletResponse response) throws Exception {
@@ -115,6 +121,7 @@ public class GarbageController {
     * @param file
     * @throws Exception
     */
+    @ApiOperation(value = "导入垃圾", notes = "导入垃圾")
     @PostMapping("/import")
     @SaCheckPermission("garbage.import")
     public R imp(MultipartFile file) throws Exception {

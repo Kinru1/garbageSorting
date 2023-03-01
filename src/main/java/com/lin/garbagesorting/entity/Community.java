@@ -1,8 +1,6 @@
 package com.lin.garbagesorting.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -35,9 +33,11 @@ public class Community  implements Serializable {
 	@ApiModelProperty(value="小区电话", hidden=false, required=false, dataType="Integer", example = "")
 	private Integer comPhone;
 
+	@TableField(fill = FieldFill.INSERT)
 	@ApiModelProperty(value="创建时间", hidden=false, required=false, dataType="Date", example = "")
 	private LocalDateTime createTime;
 
+	@TableField(fill = FieldFill.INSERT_UPDATE) //插入和更新时填充字段
 	@ApiModelProperty(value="修改时间", hidden=false, required=false, dataType="Date", example = "")
 	private LocalDateTime updateTime;
 

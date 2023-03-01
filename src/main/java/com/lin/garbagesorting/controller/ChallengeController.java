@@ -9,6 +9,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lin.garbagesorting.common.R;
 import com.lin.garbagesorting.entity.Challenge;
 import com.lin.garbagesorting.service.ChallengeService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,21 +21,17 @@ import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.List;
 
-/**
-* <p>
-*  前端控制器
-* </p>
-*
-* @author 
-* @since 2023-03-01
-*/
+
+
+@Api(tags = "问答挑战管理")
 @RestController
 @RequestMapping("/challenge")
 public class ChallengeController {
 
     @Resource
     private ChallengeService challengeService;
-    
+
+    @ApiOperation(value = "新增问答挑战", notes = "新增问答挑战")
     @PostMapping
     @SaCheckPermission("challenge.add")
     public R save(@RequestBody Challenge challenge) {
@@ -46,20 +44,21 @@ public class ChallengeController {
         return R.success();
     }
 
+    @ApiOperation(value = "修改问答挑战", notes = "修改问答挑战")
     @PutMapping
     @SaCheckPermission("challenge.edit")
     public R update(@RequestBody Challenge challenge) {
         challengeService.updateById(challenge);
         return R.success();
     }
-
+    @ApiOperation(value = "删除问答挑战", notes = "删除问答挑战")
     @DeleteMapping("/{id}")
     @SaCheckPermission("challenge.delete")
     public R delete(@PathVariable Integer id) {
         challengeService.removeById(id);
         return R.success();
     }
-
+    @ApiOperation(value = "批量删除问答挑战", notes = "新增问答挑战")
     @PostMapping("/del/batch")
     @SaCheckPermission("challenge.deleteBatch")
     public R deleteBatch(@RequestBody List<Integer> ids) {
@@ -67,18 +66,20 @@ public class ChallengeController {
         return R.success();
     }
 
+    @ApiOperation(value = "所有问答挑战", notes = "所有问答挑战")
     @GetMapping
     @SaCheckPermission("challenge.list")
     public R findAll() {
         return R.success(challengeService.list());
     }
 
+    @ApiOperation(value = "精准查询问答挑战", notes = "精准查询问答挑战")
     @GetMapping("/{id}")
     @SaCheckPermission("challenge.list")
     public R findOne(@PathVariable Integer id) {
         return R.success(challengeService.getById(id));
     }
-
+    @ApiOperation(value = "分页查询问答挑战", notes = "分页查询新增问答挑战")
     @GetMapping("/page")
     @SaCheckPermission("challenge.list")
     public R findPage(@RequestParam(defaultValue = "") String name,
@@ -89,9 +90,7 @@ public class ChallengeController {
         return R.success(challengeService.page(new Page<>(pageNum, pageSize), queryWrapper));
     }
 
-    /**
-    * 导出接口
-    */
+    @ApiOperation(value = "导出问答挑战", notes = "导出问答挑战")
     @GetMapping("/export")
     @SaCheckPermission("challenge.export")
     public void export(HttpServletResponse response) throws Exception {
@@ -115,11 +114,7 @@ public class ChallengeController {
 
     }
 
-    /**
-    * excel 导入
-    * @param file
-    * @throws Exception
-    */
+    @ApiOperation(value = "导入问答挑战", notes = "导入问答挑战")
     @PostMapping("/import")
     @SaCheckPermission("challenge.import")
     public R imp(MultipartFile file) throws Exception {

@@ -2,9 +2,7 @@ package com.lin.garbagesorting.entity;
 
 
 import cn.hutool.core.annotation.Alias;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -21,12 +19,16 @@ public class Announcement  implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	@TableField(fill = FieldFill.INSERT) //插入和更新时填充字段
 	@ApiModelProperty(value="创建时间", hidden=false, required=false, dataType="Date", example = "")
 
 	private LocalDateTime createTime;
 
 	@ApiModelProperty(value="公告类型", hidden=false, required=false, dataType="String", example = "")
 	private String announcementType;
+
+	@ApiModelProperty(value="公告ID", hidden=false, required=false, dataType="int", example = "")
+	private Integer announcementId;
 
 	@ApiModelProperty(value="公告内容", hidden=false, required=false, dataType="String", example = "")
 	private String announcementContent;

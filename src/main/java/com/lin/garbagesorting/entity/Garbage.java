@@ -35,5 +35,5 @@ public class Garbage  implements Serializable {
 	private int logDelete;
 
 	@ApiModelProperty(value="垃圾图片", hidden=false, required=true, dataType="String", example = "")
-	private String img;
+	private String garbage_img;
 }

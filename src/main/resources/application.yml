@@ -23,3 +23,6 @@ mybatis-plus:
 garbageSorting:
   path: D:\img\
 
+logging:
+  level:
+    springfox: error

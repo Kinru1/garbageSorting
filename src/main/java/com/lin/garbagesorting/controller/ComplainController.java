@@ -10,6 +10,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lin.garbagesorting.common.R;
 import com.lin.garbagesorting.entity.Complain;
 import com.lin.garbagesorting.service.ComplainService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,14 +22,7 @@ import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.List;
 
-/**
-* <p>
-*  前端控制器
-* </p>
-*
-* @author 
-* @since 2023-02-28
-*/
+@Api(tags = "投诉管理")
 @RestController
 @RequestMapping("/complain")
 public class ComplainController {
@@ -35,6 +30,7 @@ public class ComplainController {
     @Resource
     private ComplainService complainService;
 
+    @ApiOperation(value = "新增投诉", notes = "新增投诉")
     @PostMapping
     @SaCheckPermission("complain.add")
     public R save(@RequestBody Complain complain) {
@@ -47,6 +43,7 @@ public class ComplainController {
         return R.success();
     }
 
+    @ApiOperation(value = "修改投诉", notes = "修改投诉")
     @PutMapping
     @SaCheckPermission("complain.edit")
     public R update(@RequestBody Complain complain) {
@@ -54,6 +51,7 @@ public class ComplainController {
         return R.success();
     }
 
+    @ApiOperation(value = "删除投诉", notes = "删除投诉")
     @DeleteMapping("/{id}")
     @SaCheckPermission("complain.delete")
     public R delete(@PathVariable Integer id) {
@@ -61,6 +59,7 @@ public class ComplainController {
         return R.success();
     }
 
+    @ApiOperation(value = "批量删除投诉", notes = "批量删除投诉")
     @PostMapping("/del/batch")
     @SaCheckPermission("complain.deleteBatch")
     public R deleteBatch(@RequestBody List<Integer> ids) {
@@ -68,18 +67,21 @@ public class ComplainController {
         return R.success();
     }
 
+    @ApiOperation(value = "所有投诉", notes = "所有投诉")
     @GetMapping
     @SaCheckPermission("complain.list")
     public R findAll() {
         return R.success(complainService.list());
     }
 
+    @ApiOperation(value = "精准查询投诉", notes = "精准查询投诉")
     @GetMapping("/{id}")
     @SaCheckPermission("complain.list")
     public R findOne(@PathVariable Integer id) {
         return R.success(complainService.getById(id));
     }
 
+    @ApiOperation(value = "分页投诉", notes = "分页投诉")
     @GetMapping("/page")
     @SaCheckPermission("complain.list")
     public R findPage(@RequestParam(defaultValue = "") String name,
@@ -90,9 +92,7 @@ public class ComplainController {
         return R.success(complainService.page(new Page<>(pageNum, pageSize), queryWrapper));
     }
 
-    /**
-    * 导出接口
-    */
+    @ApiOperation(value = "导出投诉", notes = "导出投诉")
     @GetMapping("/export")
     @SaCheckPermission("complain.export")
     public void export(HttpServletResponse response) throws Exception {
@@ -121,6 +121,7 @@ public class ComplainController {
     * @param file
     * @throws Exception
     */
+    @ApiOperation(value = "导入投诉", notes = "导入投诉")
     @PostMapping("/import")
     @SaCheckPermission("complain.import")
     public R imp(MultipartFile file) throws Exception {

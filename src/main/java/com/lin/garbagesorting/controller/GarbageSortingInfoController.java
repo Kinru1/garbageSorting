@@ -9,6 +9,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lin.garbagesorting.common.R;
 import com.lin.garbagesorting.entity.GarbageSortingInfo;
 import com.lin.garbagesorting.service.GarbageSortingInfoService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,15 +21,15 @@ import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.List;
 
-
+@Api(tags = "垃圾分类信息管理")
 @RestController
-@RequestMapping("/garbage-sorting-info")
+@RequestMapping("/garbageSortingInfo")
 public class GarbageSortingInfoController {
 
     @Resource
     private GarbageSortingInfoService garbageSortingInfoService;
 
-    
+    @ApiOperation(value = "添加垃圾分类信息", notes = "添加垃圾分类信息")
     @PostMapping
     @SaCheckPermission("garbageSortingInfo.add")
     public R save(@RequestBody GarbageSortingInfo garbageSortingInfo) {
@@ -40,6 +42,7 @@ public class GarbageSortingInfoController {
         return R.success();
     }
 
+    @ApiOperation(value = "修改垃圾分类信息", notes = "修改垃圾分类信息")
     @PutMapping
     @SaCheckPermission("garbageSortingInfo.edit")
     public R update(@RequestBody GarbageSortingInfo garbageSortingInfo) {
@@ -47,13 +50,14 @@ public class GarbageSortingInfoController {
         return R.success();
     }
 
+    @ApiOperation(value = "删除垃圾分类信息", notes = "删除垃圾分类信息")
     @DeleteMapping("/{id}")
     @SaCheckPermission("garbageSortingInfo.delete")
     public R delete(@PathVariable Integer id) {
         garbageSortingInfoService.removeById(id);
         return R.success();
     }
-
+    @ApiOperation(value = "批量删除垃圾分类信息", notes = "批量删除垃圾分类信息")
     @PostMapping("/del/batch")
     @SaCheckPermission("garbageSortingInfo.deleteBatch")
     public R deleteBatch(@RequestBody List<Integer> ids) {
@@ -61,18 +65,23 @@ public class GarbageSortingInfoController {
         return R.success();
     }
 
+
+    @ApiOperation(value = "查询所有分类信息", notes = "查询所有分类信息")
     @GetMapping
     @SaCheckPermission("garbageSortingInfo.list")
     public R findAll() {
         return R.success(garbageSortingInfoService.list());
     }
 
+    @ApiOperation(value = "根据ID查询垃圾分类信息", notes = "根据ID查询垃圾分类信息")
     @GetMapping("/{id}")
     @SaCheckPermission("garbageSortingInfo.list")
     public R findOne(@PathVariable Integer id) {
         return R.success(garbageSortingInfoService.getById(id));
     }
 
+
+    @ApiOperation(value = "分页垃圾分类信息", notes = "分页垃圾分类信息")
     @GetMapping("/page")
     @SaCheckPermission("garbageSortingInfo.list")
     public R findPage(@RequestParam(defaultValue = "") String name,
@@ -83,9 +92,8 @@ public class GarbageSortingInfoController {
         return R.success(garbageSortingInfoService.page(new Page<>(pageNum, pageSize), queryWrapper));
     }
 
-    /**
-    * 导出接口
-    */
+
+    @ApiOperation(value = "导出垃圾分类信息", notes = "导出垃圾分类信息")
     @GetMapping("/export")
     @SaCheckPermission("garbageSortingInfo.export")
     public void export(HttpServletResponse response) throws Exception {
@@ -114,6 +122,7 @@ public class GarbageSortingInfoController {
     * @param file
     * @throws Exception
     */
+    @ApiOperation(value = "导入垃圾分类信息", notes = "导入垃圾分类信息")
     @PostMapping("/import")
     @SaCheckPermission("garbageSortingInfo.import")
     public R imp(MultipartFile file) throws Exception {

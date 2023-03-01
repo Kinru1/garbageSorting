@@ -1,9 +1,7 @@
 package com.lin.garbagesorting.entity;
 
 import cn.hutool.core.annotation.Alias;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -44,6 +42,7 @@ public class GarbageSortingInfo implements Serializable {
 	@Alias("垃圾总量")
 	private String gsTotal;
 
+	@TableField(fill = FieldFill.INSERT) //插入和更新时填充字段
 	@ApiModelProperty("创建时间")
-	private LocalDateTime creatTime;
+	private LocalDateTime createTime;
 }
