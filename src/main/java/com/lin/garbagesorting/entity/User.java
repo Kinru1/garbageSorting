@@ -18,7 +18,7 @@ public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-
+	private String token;
 
 	@ApiModelProperty(value="姓名", hidden=false, required=true, dataType="String", example = "")
 	private String name;
@@ -64,5 +64,6 @@ public class User implements Serializable {
 	@ApiModelProperty(value="是否删除", hidden=false, required=false, dataType="Date", example = "")
 	private int logDelete;
 
-
+	@ApiModelProperty(value="用户ID", hidden=false, required=true, dataType="String", example = "")
+	private Integer userId;
 }

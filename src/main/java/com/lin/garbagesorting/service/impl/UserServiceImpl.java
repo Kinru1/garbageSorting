@@ -1,18 +1,27 @@
 package com.lin.garbagesorting.service.impl;
 
+import cn.dev33.satoken.secure.BCrypt;
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lin.garbagesorting.entity.Operation;
+import com.lin.garbagesorting.entity.Role;
+import com.lin.garbagesorting.entity.RoleOperation;
 import com.lin.garbagesorting.entity.User;
 import com.lin.garbagesorting.mapper.UserMapper;
+import com.lin.garbagesorting.service.OperationService;
+import com.lin.garbagesorting.service.RoleOperationService;
+import com.lin.garbagesorting.service.RoleService;
 import com.lin.garbagesorting.service.UserService;
-import com.lin.garbagesorting.utils.JwtUtils;
-import com.lin.garbagesorting.vo.LoginVo;
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
+import com.lin.garbagesorting.vo.UserVo;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 
@@ -58,4 +67,74 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
 //        return JwtUtils.getJwtToken(ucenterMember.getId(), ucenterMember.getNickname());
 //    }
 
+    @Resource
+    RoleOperationService roleOperationService;
+
+    @Resource
+    RoleService roleService;
+
+    @Resource
+    OperationService operationService;
+
+    @Override
+public UserVo login(User user) {
+    User dbUser;
+    try {
+        dbUser = getOne(new UpdateWrapper<User>().eq("username", user.getUsername())
+           );
+    } catch (Exception e) {
+        throw new RuntimeException("数据库异常");
+    }
+    if (dbUser == null) {
+        throw new RuntimeException("未找到用户");
+    }
+//        String securePass = SaSecureUtil.aesEncrypt(Constants.LOGIN_USER_KEY, user.getPassword());
+//        if (!securePass.equals(dbUser.getPassword())) {
+//            throw new ServiceException("用户名或密码错误");
+//        }
+   // if (!BCrypt.checkpw(user.getPassword(), dbUser.getPassword()))
+        if (!user.getPassword().equals( dbUser.getPassword()))
+    {
+        throw new RuntimeException("用户名或密码错误");
+    }
+    // 登录
+   // StpUtil.login(dbUser.getUserId());  // loginId
+    //String tokenValue = StpUtil.getTokenInfo().getTokenValue();
+//        LoginDTO loginDTO = new LoginDTO(dbUser, tokenValue);
+
+    // 查询用户的菜单树（2层）
+    int flag = dbUser.getType();
+    List<Operation> all = getOperations(flag);  // 水平
+    List<Operation> menus = getTreeOperations(all); // 树
+    // 页面的按钮权限集合
+    List<Operation> auths = all.stream().filter(Operation -> Operation.getType() == 3).collect(Collectors.toList());
+    return UserVo.builder().user(dbUser).menus(menus).auths(auths).build();
+}
+
+
+
+
+    public List<Operation> getOperations(int type) {
+        Role role = roleService.getOne(new QueryWrapper<Role>().eq("type", type));
+        List<RoleOperation> roleOperations = roleOperationService.list(new QueryWrapper<RoleOperation>().eq("role_id", role.getId()));
+        List<Integer> OperationIds = roleOperations.stream().map(RoleOperation::getOperationId).collect(Collectors.toList());
+        List<Operation> OperationList = operationService.list();
+        List<Operation> all = new ArrayList<>();  // 水平的菜单树
+        for (Integer OperationId : OperationIds) {
+            OperationList.stream().filter(Operation -> Operation.getId().equals(OperationId)).findFirst()
+                    .ifPresent(all::add);
+        }
+        return all;
+    }
+    private List<Operation> getTreeOperations(List<Operation> all) {
+        // 菜单树 1级 -> 2级
+        List<Operation> parentList = all.stream().filter(Operation -> Operation.getType() == 1
+                || (Operation.getType() == 2 && Operation.getFatherId() == null)).collect(Collectors.toList());// type==1 是目录  或者  pid = null
+        for (Operation Operation : parentList) {
+            Integer pid = Operation.getId();
+            List<Operation> level2List = all.stream().filter(Operation1 -> pid.equals(Operation1.getFatherId())).collect(Collectors.toList());// 2级菜单
+            Operation.setChildren(level2List);
+        }
+        return parentList.stream().sorted(Comparator.comparing(Operation::getOrders)).collect(Collectors.toList());  // 排序
+    }
 }

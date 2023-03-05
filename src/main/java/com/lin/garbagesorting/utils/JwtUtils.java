@@ -1,92 +1,59 @@
 package com.lin.garbagesorting.utils;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.Claim;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import io.jsonwebtoken.*;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Calendar;
 import java.util.Date;
 
-public class JwtUtils {
+        @Slf4j
+        public class JwtUtils {
 
-    /**
-     * 两个常量： 过期时间；秘钥
-     */
-    public static final long EXPIRE = 1000*60*60*24;
-    public static final String SECRET = "ukc8BDbRigUDaY6pZFfWus2jZWLPHO";
+            private static long time = 5*1000 ;
+            private static String secret = "q1w2^&*&*%";
 
-    /**
-     * 生成token字符串的方法
-     * @param type
-     * @param username
-     * @return
-     */
-    public static String getJwtToken(String username,int type){
-        String JwtToken = Jwts.builder()
-                //JWT头信息
-                .setHeaderParam("typ", "JWT")
-                .setHeaderParam("alg", "HS256")
-                //设置分类；设置过期时间 一个当前时间，一个加上设置的过期时间常量
-                .setSubject("lin-user")
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRE))
-                //设置token主体信息，存储用户信息
-                .claim("username", username)
-                .claim("type", type)
-                //.signWith(SignatureAlgorithm.ES256, SECRET)
-                .signWith(SignatureAlgorithm.HS256, SECRET)
-                .compact();
-        return JwtToken;
-    }
-
-    /**
-     * 判断token是否存在与有效
-     * @Param jwtToken
-     */
-    public static boolean checkToken(String jwtToken){
-        if (StringUtil.isEmpty(jwtToken)){
-            return false;
-        }
-        try{
-            //验证token
-            Jwts.parser().setSigningKey(SECRET).parseClaimsJws(jwtToken);
-        }catch (Exception e){
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * 判断token是否存在与有效
-     * @Param request
-     */
-    public static boolean checkToken(HttpServletRequest request){
-        try {
-            String token = request.getHeader("token");
-            if (StringUtil.isEmpty(token)){
-                return false;
+            public static String createToken(){
+                JwtBuilder jwtBuilder = Jwts.builder();
+                String jwtToken = jwtBuilder
+                        //header
+                        .setHeaderParam("typ", "JWT")
+                        .setHeaderParam("alg", "HS256")
+                        //payload
+                        .claim("username", "admin")
+                        .claim("role", "admin")
+                        .setSubject("admin-test")
+                        .setExpiration(new Date(System.currentTimeMillis()+time))
+                        .setId(UUID.randomUUID().toString())
+                        //signature
+                        .signWith(SignatureAlgorithm.HS256, secret)
+                        .compact();
+                return jwtToken;
             }
-            Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token);
-        }catch (Exception e){
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-    }
 
-    /**
-     * 根据token获取username
+            public static boolean checkToken(String token){
+                log.info("使用JWTUtil.....");
+                if(token == null){
+                    log.info("token为空");
+                    return false;
+                }
+                try {
+                    Jws<Claims> claimsJws = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);//解析token信息赋值给claimsJws
+                } catch (Exception e) {
+                    log.info("解析异常");
+                    return false;
+                }
+                log.info("解析成功,token有效");
+                return true;
+            }
 
-     */
-    public static String getUsernameByJwtToken(HttpServletRequest request){
-        String token = request.getHeader("token");
-        if (StringUtil.isEmpty(token)){
-            return "";
-        }
-        Jws<Claims> claimsJws = Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token);
-        Claims body = claimsJws.getBody();
-        return (String) body.get("username");
-    }
+
 }
