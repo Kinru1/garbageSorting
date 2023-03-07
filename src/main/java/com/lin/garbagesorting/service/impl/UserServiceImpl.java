@@ -1,10 +1,14 @@
 package com.lin.garbagesorting.service.impl;
 
 import cn.dev33.satoken.secure.BCrypt;
-import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lin.garbagesorting.common.R;
+import com.lin.garbagesorting.dto.UserDto;
 import com.lin.garbagesorting.entity.Operation;
 import com.lin.garbagesorting.entity.Role;
 import com.lin.garbagesorting.entity.RoleOperation;
@@ -14,8 +18,14 @@ import com.lin.garbagesorting.service.OperationService;
 import com.lin.garbagesorting.service.RoleOperationService;
 import com.lin.garbagesorting.service.RoleService;
 import com.lin.garbagesorting.service.UserService;
+import com.lin.garbagesorting.utils.SHAUtil;
+import com.lin.garbagesorting.utils.SnowFlake;
+import com.lin.garbagesorting.utils.StringUtil;
 import com.lin.garbagesorting.vo.UserVo;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -27,14 +37,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements UserService {
-//    public PageInfo getList(Integer page, Integer rows, String name) {
-//        Example example = new Example(RoleDto.class);
-//        //增加排序
-//        example.setOrderByClause("id desc");
-//        example.createCriteria().andLike("name", StringUtil.buildLikeStr(name));
-//        PageHelper.startPage(page, rows);
-//        return new PageInfo<>(policeMapper.selectByExample(example));
-//    }
+
 
 //    @Override
 //    public String login( loginvo) {
@@ -78,22 +81,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
 
     @Override
 public UserVo login(User user) {
-    User dbUser;
+    User users;
     try {
-        dbUser = getOne(new UpdateWrapper<User>().eq("username", user.getUsername())
+        users = getOne(new UpdateWrapper<User>().eq("username", user.getUsername())
            );
     } catch (Exception e) {
         throw new RuntimeException("数据库异常");
     }
-    if (dbUser == null) {
-        throw new RuntimeException("未找到用户");
+
+        if (!StringUtil.isNotNull(users)) {
+            throw new NullPointerException("用户名不存在");
     }
+
 //        String securePass = SaSecureUtil.aesEncrypt(Constants.LOGIN_USER_KEY, user.getPassword());
 //        if (!securePass.equals(dbUser.getPassword())) {
 //            throw new ServiceException("用户名或密码错误");
 //        }
    // if (!BCrypt.checkpw(user.getPassword(), dbUser.getPassword()))
-        if (!user.getPassword().equals( dbUser.getPassword()))
+        if (!user.getPassword().equals(users.getPassword()))
     {
         throw new RuntimeException("用户名或密码错误");
     }
@@ -103,16 +108,49 @@ public UserVo login(User user) {
 //        LoginDTO loginDTO = new LoginDTO(dbUser, tokenValue);
 
     // 查询用户的菜单树（2层）
-    int flag = dbUser.getType();
+    int flag = users.getType();
     List<Operation> all = getOperations(flag);  // 水平
     List<Operation> menus = getTreeOperations(all); // 树
     // 页面的按钮权限集合
     List<Operation> auths = all.stream().filter(Operation -> Operation.getType() == 3).collect(Collectors.toList());
-    return UserVo.builder().user(dbUser).menus(menus).auths(auths).build();
+    return UserVo.builder().user(users).menus(menus).auths(auths).build();
 }
 
+    @Override
+    public void updatePassword(UserDto userDto) throws Exception {
+        User user = getOne(new UpdateWrapper<User>().eq("user_id", userDto.getUserID()));
+        if (StringUtil.isNull(user)) {
+            throw new Exception("未找到用户");
+        }
+        //boolean checkpw = BCrypt.checkpw(userDto.getPassword(), user.getPassword());
+//        if (!checkpw) {
+//            throw new Exception("原密码错误");
+//        }
+        String newPassword = userDto.getPassword();
+        user.setPassword(BCrypt.hashpw(newPassword));
+        updateById(user);   // 设置到数据库
 
+    }
+    public User insertUser(User user) {
+        // 设置昵称
+        if (StringUtil.isNotEmpty(user.getUsername())) {
+            user.setName("系统用户" + RandomStringUtils.randomAlphabetic(10));
+        }
+        if (StringUtil.isNotEmpty(user.getPassword())) {
+            user.setPassword(
+                    SHAUtil.SHA256Encrypt("123456")); // 加密用户密码
+        }
 
+        // 设置唯一标识
+        SnowFlake worker = new SnowFlake(1, 1, 1);
+        user.setUserId(worker.nextId());
+        try {
+            save(user);
+        } catch (Exception e) {
+            throw new RuntimeException("注册失败", e);
+        }
+        return user;
+    }
 
     public List<Operation> getOperations(int type) {
         Role role = roleService.getOne(new QueryWrapper<Role>().eq("type", type));
@@ -137,4 +175,6 @@ public UserVo login(User user) {
         }
         return parentList.stream().sorted(Comparator.comparing(Operation::getOrders)).collect(Collectors.toList());  // 排序
     }
+
+
 }

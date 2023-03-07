@@ -7,6 +7,7 @@ import com.lin.garbagesorting.entity.GarbageSortingInfo;
 import com.lin.garbagesorting.mapper.GarbageSortingInfoMapper;
 import com.lin.garbagesorting.service.GarbageSiteService;
 import com.lin.garbagesorting.service.GarbageSortingInfoService;
+import com.lin.garbagesorting.utils.SnowFlake;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -19,5 +20,15 @@ public class GarbageSortingInfoServiceImpl extends ServiceImpl<GarbageSortingInf
 
 	public BaseMapper<GarbageSortingInfo> getMapper() {
 		return garbageSortingInfoMapper;
+	}
+	public GarbageSortingInfo saveTotal(GarbageSortingInfo garbageSortingInfo){
+		double recy =  garbageSortingInfo.getGsTotalRecyclable();
+		double hazard =  garbageSortingInfo.getGsTotalHazardous();
+		double other = garbageSortingInfo.getGsTotalOther();
+		double kitchen = garbageSortingInfo.getGsTotalKitchen();
+		double total  =	recy + hazard +other + kitchen;
+		garbageSortingInfo.setGsTotal(total);
+
+		return garbageSortingInfo;
 	}
 }

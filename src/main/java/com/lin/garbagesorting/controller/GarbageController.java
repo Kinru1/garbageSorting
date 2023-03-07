@@ -58,6 +58,11 @@ public class GarbageController {
         return R.success();
     }
 
+
+
+
+
+
     @ApiOperation(value = "批量删除垃圾", notes = "批量删除垃圾")
     @PostMapping("/del/batch")
     @SaCheckPermission("garbage.deleteBatch")

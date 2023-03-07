@@ -64,6 +64,6 @@ public class User implements Serializable {
 	@ApiModelProperty(value="是否删除", hidden=false, required=false, dataType="Date", example = "")
 	private int logDelete;
 
-	@ApiModelProperty(value="用户ID", hidden=false, required=true, dataType="String", example = "")
-	private Integer userId;
+	@ApiModelProperty(value="用户ID", hidden=false, required=true,  example = "")
+	private Long userId;
 }

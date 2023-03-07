@@ -34,11 +34,12 @@ public class LoginController {
         if(user2!=null){
             log.info("登录成功");
             //添加token
-            user.setToken(JwtUtils.createToken());
+            user2.setToken(JwtUtils.createToken());
+
             log.info("............");
             return  R.suc(user2);
         }
-        return  null;
+        return  R.error();
 
     }
     @GetMapping("/checkToken")

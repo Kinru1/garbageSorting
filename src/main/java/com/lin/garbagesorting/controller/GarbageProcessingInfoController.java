@@ -1,6 +1,7 @@
 package com.lin.garbagesorting.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
@@ -11,6 +12,8 @@ import com.lin.garbagesorting.entity.GarbageProcessingInfo;
 import com.lin.garbagesorting.service.GarbageProcessingInfoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.manager.util.SessionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,7 +24,7 @@ import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.List;
 
-
+@Slf4j
 @RestController
 @RequestMapping("/garbageProcessingInfo")
 @Api(tags = "垃圾处理信息管理")
@@ -33,13 +36,15 @@ public class GarbageProcessingInfoController {
     @ApiOperation(value = "新增垃圾处理信息", notes = "新增垃圾处理信息")
     @PostMapping
     @SaCheckPermission("garbageProcessingInfo.add")
-    public R save(@RequestBody GarbageProcessingInfo garbageProcessingInfo) {
-//        User user = SessionUtils.getUser();
+    public R save(@RequestBody GarbageProcessingInfo garbageProcessingInfo,@RequestParam String username) {
+          //User user = StpUtil.getSession().get(LOGIN_USER_KEY);
 //        garbageProcessingInfo.setUser(user.getName());
 //        garbageProcessingInfo.setUserid(user.getId());
 //        garbageProcessingInfo.setDate(DateUtil.today());
 //        garbageProcessingInfo.setTime(DateUtil.now());
-        garbageProcessingInfoService.save(garbageProcessingInfo);
+        log.info(garbageProcessingInfo.toString());
+        GarbageProcessingInfo gpi= garbageProcessingInfoService.selectGPI(garbageProcessingInfo,username);
+        garbageProcessingInfoService.save(gpi);
         return R.success();
     }
 

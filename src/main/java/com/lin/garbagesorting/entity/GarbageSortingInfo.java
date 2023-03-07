@@ -1,7 +1,9 @@
 package com.lin.garbagesorting.entity;
 
 import cn.hutool.core.annotation.Alias;
+import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -27,8 +29,8 @@ public class GarbageSortingInfo implements Serializable {
 	@ApiModelProperty(value="有害垃圾总量", hidden=false, required=false, dataType="null", example = "")
 	private double gsTotalHazardous;
 
-	@ApiModelProperty(value="", hidden=false, required=false, dataType="Integer", example = "")
-	private Integer gsId;
+	@ApiModelProperty(value="", hidden=false, required=false)
+	private Long gsId;
 
 	@TableId(value = "id", type = IdType.AUTO)
 	private Integer id;
@@ -40,9 +42,13 @@ public class GarbageSortingInfo implements Serializable {
 	// 垃圾总量
 	@ApiModelProperty("垃圾总量")
 	@Alias("垃圾总量")
-	private String gsTotal;
 
-	@TableField(fill = FieldFill.INSERT) //插入和更新时填充字段
+	private double gsTotal;
+
+	@JSONField(format="yyyy-MM-dd HH:mm:ss")
 	@ApiModelProperty("创建时间")
 	private LocalDateTime createTime;
+
+	@ApiModelProperty(value="小区名", hidden=false, required=false, dataType="String", example = "")
+	private String community;
 }

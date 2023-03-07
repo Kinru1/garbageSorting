@@ -19,4 +19,5 @@ public class UserVo implements Serializable {
     private String token;
     private List<Operation> menus;
     private List<Operation> auths;
+
 }

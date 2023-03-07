@@ -40,6 +40,8 @@ public class R implements Serializable {
         this.data = data;
     }
 
+
+
     public static R success()
     {
         return new R(RCodeEnum.success.getCode(), RCodeEnum.success.getDesc(), true, null);

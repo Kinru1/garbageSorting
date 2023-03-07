@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lin.garbagesorting.common.R;
 import com.lin.garbagesorting.entity.GarbageSortingInfo;
 import com.lin.garbagesorting.service.GarbageSortingInfoService;
+import com.lin.garbagesorting.utils.SnowFlake;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
@@ -33,20 +34,21 @@ public class GarbageSortingInfoController {
     @PostMapping
     @SaCheckPermission("garbageSortingInfo.add")
     public R save(@RequestBody GarbageSortingInfo garbageSortingInfo) {
-//        User user = SessionUtils.getUser();
-//        garbageSortingInfo.setUser(user.getName());
-//        garbageSortingInfo.setUserid(user.getId());
-//        garbageSortingInfo.setDate(DateUtil.today());
-//        garbageSortingInfo.setTime(DateUtil.now());
-        garbageSortingInfoService.save(garbageSortingInfo);
+        GarbageSortingInfo GSI = garbageSortingInfoService.saveTotal(garbageSortingInfo);
+        SnowFlake worker = new SnowFlake(2, 2, 2);
+        GSI.setGsId(worker.nextId());
+        garbageSortingInfoService.save(GSI);
         return R.success();
     }
+
+
 
     @ApiOperation(value = "修改垃圾分类信息", notes = "修改垃圾分类信息")
     @PutMapping
     @SaCheckPermission("garbageSortingInfo.edit")
     public R update(@RequestBody GarbageSortingInfo garbageSortingInfo) {
-        garbageSortingInfoService.updateById(garbageSortingInfo);
+        GarbageSortingInfo GSI = garbageSortingInfoService.saveTotal(garbageSortingInfo);
+        garbageSortingInfoService.updateById(GSI);
         return R.success();
     }
 
@@ -79,6 +81,22 @@ public class GarbageSortingInfoController {
     public R findOne(@PathVariable Integer id) {
         return R.success(garbageSortingInfoService.getById(id));
     }
+
+
+
+
+
+    @ApiOperation(value="查询最近的垃圾分类", notes = "根据ID查询垃圾分类信息")
+    @GetMapping("/selectLast")
+    @SaCheckPermission("garbageSortingInfo.list")
+    public R findLastGarbageInfo(@PathVariable Integer day,String community) {
+
+
+        return null;
+    }
+
+
+
 
 
     @ApiOperation(value = "分页垃圾分类信息", notes = "分页垃圾分类信息")

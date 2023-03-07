@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.google.protobuf.ServiceException;
+import com.lin.garbagesorting.dto.UserDto;
 import com.lin.garbagesorting.entity.Operation;
 import com.lin.garbagesorting.entity.User;
 import com.lin.garbagesorting.vo.UserVo;
@@ -19,5 +20,7 @@ import java.util.stream.Collectors;
 public interface UserService  extends IService<User> {
     UserVo login(User user);
     List<Operation> getOperations(int type);
+    User insertUser(User user);
+    void updatePassword(UserDto userDto) throws Exception;
 
 }

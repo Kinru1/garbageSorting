@@ -35,15 +35,15 @@ public class OperationServiceImpl extends ServiceImpl<OperationMapper, Operation
     public void deleteOperation(Integer id) {
         // 删除 role_Operation表数据
         roleOperationMapper.delete(new UpdateWrapper<RoleOperation>().eq("Operation_id", id));
-        remove(new UpdateWrapper<Operation>().set("pid", id)); // 删除子菜单
+        remove(new UpdateWrapper<Operation>().set("fatherId", id)); // 删除子菜单
         removeById(id);
     }
 
     // 递归生成树
-    private List<Operation> childrenTree(Integer pid, List<Operation> allData) {
+    private List<Operation> childrenTree(Integer fatherId, List<Operation> allData) {
         List<Operation> list = new ArrayList<>();
         for (Operation Operation : allData) {
-            if (Objects.equals(Operation.getFatherId(), pid)) {  // null, 一级
+            if (Objects.equals(Operation.getFatherId(), fatherId)) {  // null, 一级
                 list.add(Operation);
                 List<Operation> childrenTree = childrenTree(Operation.getId(), allData);  // 递归调用， 摘取二级节点、三级、四级...
                 Operation.setChildren(childrenTree);

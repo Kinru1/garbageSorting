@@ -17,7 +17,7 @@ public class Office  implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@ApiModelProperty(value="", hidden=false, required=true, dataType="Integer", example = "")
-	private Integer ofId;
+	private Long ofId;
 
 	@ApiModelProperty(value="物业电话", hidden=false, required=false, dataType="Integer", example = "")
 	private Integer ofPhone;
