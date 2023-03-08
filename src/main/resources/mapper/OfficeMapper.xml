@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lin.garbagesorting.mapper.OfficeMapper">
+    <select id="getAllTenant" resultType="com.lin.garbagesorting.entity.Tenant">
+        SELECT
+            t.*
+        FROM
+            tenant t,
+            office o
+        WHERE
+            of_username = #{username}
+          AND o.of_community = t.tenant_community
+    </select>
+</mapper>

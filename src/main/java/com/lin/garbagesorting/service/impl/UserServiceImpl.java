@@ -9,10 +9,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lin.garbagesorting.common.R;
 import com.lin.garbagesorting.dto.UserDto;
-import com.lin.garbagesorting.entity.Operation;
-import com.lin.garbagesorting.entity.Role;
-import com.lin.garbagesorting.entity.RoleOperation;
-import com.lin.garbagesorting.entity.User;
+import com.lin.garbagesorting.entity.*;
 import com.lin.garbagesorting.mapper.UserMapper;
 import com.lin.garbagesorting.service.OperationService;
 import com.lin.garbagesorting.service.RoleOperationService;
@@ -134,21 +131,29 @@ public UserVo login(User user) {
     public User insertUser(User user) {
         // 设置昵称
         if (StringUtil.isNotEmpty(user.getUsername())) {
-            user.setName("系统用户" + RandomStringUtils.randomAlphabetic(10));
+            user.setName("用户" + RandomStringUtils.randomAlphabetic(6));
         }
         if (StringUtil.isNotEmpty(user.getPassword())) {
             user.setPassword(
                     SHAUtil.SHA256Encrypt("123456")); // 加密用户密码
         }
 
-        // 设置唯一标识
+        // 雪花
         SnowFlake worker = new SnowFlake(1, 1, 1);
         user.setUserId(worker.nextId());
-        try {
             save(user);
-        } catch (Exception e) {
-            throw new RuntimeException("注册失败", e);
-        }
+            if(user.getType()==1){
+                Tenant tenant= new Tenant();
+                tenant.setTenantUsername(user.getUsername());
+            }else if(user.getType()==2){
+                Office office = new Office();
+                office.setOfUsername(user.getUsername());
+            }else {
+                System.out.println("管理员");
+            }
+
+
+
         return user;
     }
 

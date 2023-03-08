@@ -4,13 +4,20 @@ import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lin.garbagesorting.common.R;
 import com.lin.garbagesorting.entity.Announcement;
+import com.lin.garbagesorting.entity.Office;
+import com.lin.garbagesorting.entity.Tenant;
 import com.lin.garbagesorting.service.AnnouncementService;
+import com.lin.garbagesorting.service.OfficeService;
+import com.lin.garbagesorting.service.TenantService;
+import com.lin.garbagesorting.utils.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,15 +36,28 @@ public class AnnouncementController {
     @Resource
     private AnnouncementService announcementService;
 
+    @Resource
+    private TenantService tenantService;
+
+    @Resource
+    private OfficeService officeService;
+
     @ApiOperation(value = "新增公告", notes = "新增公告")
     @PostMapping
     @SaCheckPermission("announcement.add")
-    public R save(@RequestBody Announcement announcement) {
-//        User user = SessionUtils.getUser();
-//        announcement.setUser(user.getName());
-//        announcement.setUserid(user.getId());
-//        announcement.setDate(DateUtil.today());
-//        announcement.setTime(DateUtil.now());
+    public R saveByAdmin(@RequestBody Announcement announcement) {
+        announcementService.save(announcement);
+        return R.success();
+    }
+
+
+    @ApiOperation(value = "新增公告", notes = "新增公告")
+    @PostMapping
+    @SaCheckPermission("announcement.myAdd")
+    public R save(@RequestBody Announcement announcement,@RequestParam String username) {
+        LambdaQueryWrapper<Office> lqWrapper = new LambdaQueryWrapper();
+//        //添加过滤条件
+        lqWrapper.eq(StringUtils.isNotEmpty(username), Office::getOfUsername,username);
         announcementService.save(announcement);
         return R.success();
     }
@@ -73,6 +93,8 @@ public class AnnouncementController {
         return R.success(announcementService.list());
     }
 
+
+
     @ApiOperation(value = "查询ID公告", notes = "ID查询公告")
     @GetMapping("/{id}")
     @SaCheckPermission("announcement.list")
@@ -80,16 +102,48 @@ public class AnnouncementController {
         return R.success(announcementService.getById(id));
     }
 
+
+
+
+//    @ApiOperation(value = "分页公告", notes = "分页公告")
+//    @GetMapping("/page")
+//    @SaCheckPermission("announcement.list")
+//    public R findPage(@RequestParam(defaultValue = "") String announcementTitle,
+//                           @RequestParam Integer pageNum,
+//                           @RequestParam Integer pageSize) {
+//        QueryWrapper<Announcement> queryWrapper = new QueryWrapper<Announcement>().orderByDesc("id");
+////
+////        LambdaQueryWrapper<Office> lqWrapper = new LambdaQueryWrapper();
+////
+////        QueryWrapper<Tenant> queryWrapper2 = new QueryWrapper();
+////
+////        lqWrapper.eq(StringUtils.isNotEmpty(username), Office::getOfUsername,username);
+////        if(StringUtil.isNotNull(officeService.getOne(lqWrapper).getOfCommunity())){
+////            String community  = officeService.getOne(lqWrapper).getOfCommunity();
+////        }
+//        //业主的
+////        if(StringUtil.isNotNull(tenantService.getOne(queryWrapper2).getTenantCommunity())){
+////            String community  = tenantService.getOne(queryWrapper2).getTenantCommunity();
+////        }
+//
+//        //模糊查询
+//        queryWrapper.like(!"".equals(announcementTitle), "announcement_title", announcementTitle);
+//        return R.success(announcementService.page(new Page<>(pageNum, pageSize), queryWrapper));
+//    }
+
+
     @ApiOperation(value = "分页公告", notes = "分页公告")
     @GetMapping("/page")
-    @SaCheckPermission("announcement.list")
-    public R findPage(@RequestParam(defaultValue = "") String name,
-                           @RequestParam Integer pageNum,
-                           @RequestParam Integer pageSize) {
+    @SaCheckPermission("announcement.List")
+    public R findAllPage(@RequestParam(defaultValue = "") String announcementTitle,
+                      @RequestParam Integer pageNum,
+                      @RequestParam Integer pageSize) {
         QueryWrapper<Announcement> queryWrapper = new QueryWrapper<Announcement>().orderByDesc("id");
-        queryWrapper.like(!"".equals(name), "name", name);
+        queryWrapper.like(!"".equals(announcementTitle), "announcement_title", announcementTitle);
         return R.success(announcementService.page(new Page<>(pageNum, pageSize), queryWrapper));
     }
+
+
 
     /**
     * 导出接口

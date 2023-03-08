@@ -49,4 +49,8 @@ public class Announcement  implements Serializable {
 	@ApiModelProperty("公告文件")
 
 	private String announcementFile;
+
+	@ApiModelProperty("公告标题")
+
+	private String announcementTitle;
 }

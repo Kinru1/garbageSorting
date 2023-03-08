@@ -132,6 +132,10 @@ public class UserController {
 //    public String hello(){
 //        return "1";
 //    }
+
+
+
+
 @PutMapping
 @SaCheckPermission("user.edit")
 public R update(@RequestBody User user) {
@@ -147,6 +151,8 @@ public R update(@RequestBody User user) {
         return R.success();
     }
 
+
+
     @PostMapping("/del/batch")
     @SaCheckPermission("user.deleteBatch")
     public R deleteBatch(@RequestBody List<Integer> ids) {
@@ -154,17 +160,23 @@ public R update(@RequestBody User user) {
         return R.success();
     }
 
+
+
     @GetMapping
     @SaCheckPermission("user.list")
-    public R findAll() {
+    public R findAll()
+    {
         return R.success(userService.list());
     }
+
+
 
     @GetMapping("/{id}")
     @SaCheckPermission("user.list")
     public R findOne(@PathVariable Integer id) {
         return R.success(userService.getById(id));
     }
+
 
     @GetMapping("/page")
     @SaCheckPermission("user.list")
@@ -176,6 +188,7 @@ public R update(@RequestBody User user) {
         // and
         return R.success(userService.page(new Page<>(pageNum, pageSize), queryWrapper));
     }
+
 
     /**
      * 导出接口
@@ -209,7 +222,7 @@ public R update(@RequestBody User user) {
         LambdaQueryWrapper<User> qWrapper = new LambdaQueryWrapper();
         if(StringUtils.isNotEmpty(user.getUsername())){
             if(StringUtil.isNotNull(qWrapper.eq(User::getUsername,user.getUsername()))){
-                return  R.error("新增失败");
+                return  R.error("新增失败,用户名已存在");
             }else{
                 userService.insertUser(user);
             }

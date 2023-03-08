@@ -26,6 +26,9 @@ public class Tenant implements Serializable {
 	@ApiModelProperty(value="业主名", hidden=false, required=false, dataType="String", example = "")
 	private String tenantOwer;
 
+	@ApiModelProperty(value="业主用户名", hidden=false, required=false, dataType="String", example = "")
+	private String tenantUsername;
+
 	@TableId(value = "id", type = IdType.AUTO)
 	private Integer id;
 

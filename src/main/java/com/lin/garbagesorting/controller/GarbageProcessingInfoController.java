@@ -72,6 +72,8 @@ public class GarbageProcessingInfoController {
         return R.success();
     }
 
+
+
     @ApiOperation(value = "所有垃圾处理信息", notes = "所有垃圾处理信息")
     @GetMapping
     @SaCheckPermission("garbageProcessingInfo.list")
@@ -79,12 +81,15 @@ public class GarbageProcessingInfoController {
         return R.success(garbageProcessingInfoService.list());
     }
 
+
+
     @ApiOperation(value = "精准垃圾处理信息", notes = "精准查询垃圾处理信息")
     @GetMapping("/{id}")
     @SaCheckPermission("garbageProcessingInfo.list")
     public R findOne(@PathVariable Integer id) {
         return R.success(garbageProcessingInfoService.getById(id));
     }
+
 
     @ApiOperation(value = "垃圾处理信息分页", notes = "垃圾处理信息分页")
     @GetMapping("/page")

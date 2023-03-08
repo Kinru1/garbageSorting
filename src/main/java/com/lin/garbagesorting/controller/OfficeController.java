@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lin.garbagesorting.common.R;
 import com.lin.garbagesorting.entity.Office;
+import com.lin.garbagesorting.entity.Tenant;
 import com.lin.garbagesorting.service.OfficeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -75,6 +76,8 @@ public class OfficeController {
         return R.success(officeService.list());
     }
 
+
+
     @ApiOperation(value = "根据ID查询物业", notes = "根据ID查询物业")
     @GetMapping("/{id}")
     @SaCheckPermission("office.list")
@@ -135,5 +138,16 @@ public class OfficeController {
         officeService.saveBatch(list);
         return R.success();
     }
+
+
+
+    @ApiOperation(value = "查询小区所有业主", notes = "查询小区所有业主")
+    @GetMapping("/getAllTenant")
+    @SaCheckPermission("office.getAllTenant")
+    public R getAllTenant(@RequestParam String username) {
+       List<Tenant> tenants =  officeService.getAllTenant(username);
+        return R.success(tenants);
+    }
+
 
 }

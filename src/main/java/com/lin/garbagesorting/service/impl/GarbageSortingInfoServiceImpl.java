@@ -11,6 +11,7 @@ import com.lin.garbagesorting.utils.SnowFlake;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service
 public class GarbageSortingInfoServiceImpl extends ServiceImpl<GarbageSortingInfoMapper,GarbageSortingInfo> implements GarbageSortingInfoService {
@@ -21,6 +22,7 @@ public class GarbageSortingInfoServiceImpl extends ServiceImpl<GarbageSortingInf
 	public BaseMapper<GarbageSortingInfo> getMapper() {
 		return garbageSortingInfoMapper;
 	}
+
 	public GarbageSortingInfo saveTotal(GarbageSortingInfo garbageSortingInfo){
 		double recy =  garbageSortingInfo.getGsTotalRecyclable();
 		double hazard =  garbageSortingInfo.getGsTotalHazardous();
@@ -31,4 +33,25 @@ public class GarbageSortingInfoServiceImpl extends ServiceImpl<GarbageSortingInf
 
 		return garbageSortingInfo;
 	}
+
+	public double getLastTotal(Integer day,String community,String garbageType) {
+		double gsi=  garbageSortingInfoMapper.getLastTotal(day,community,garbageType);
+		return gsi;
+	}
+//	public double getLastTotalRecy(Integer day,String community) {
+//		double glr=  garbageSortingInfoMapper.getLastTotal(day,community);
+//		return glr;
+//	}
+//	public double getLastTotalOther(Integer day,String community) {
+//		double glo=  garbageSortingInfoMapper.getLastTotal(day,community);
+//		return glo;
+//	}
+//	public double getLastTotalKitchen(Integer day,String community) {
+//		double glk=  garbageSortingInfoMapper.getLastTotal(day,community);
+//		return glk;
+//	}
+//	public double getLastTotalHazardous(Integer day,String community) {
+//		double glh=  garbageSortingInfoMapper.getLastTotal(day,community);
+//		return glh;
+//	}
 }

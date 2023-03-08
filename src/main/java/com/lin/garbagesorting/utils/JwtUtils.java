@@ -18,8 +18,8 @@ import java.util.Date;
         @Slf4j
         public class JwtUtils {
 
-            private static long time = 5*1000 ;
-            private static String secret = "q1w2^&*&*%";
+            private static long time = 60*1000*24;
+            private static String secret = "z1b2^&*&*%Kinrui";
 
             public static String createToken(){
                 JwtBuilder jwtBuilder = Jwts.builder();

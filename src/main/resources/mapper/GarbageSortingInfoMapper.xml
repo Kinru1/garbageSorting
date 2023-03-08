@@ -1,15 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lin.garbagesorting.mapper.GarbageSortingInfoMapper">
-    <select id="getSelectList" resultType="com.lin.garbagesorting.entity.GarbageSortingInfo" parameterType="int">
+    <select id="getLastTotal" resultType="double" >
         SELECT
-            sum( gs_total )
+        <if test="garbageType != null and garbageType =='gsTotalRecyclable'">
+            sum(gs_total_recyclable)
+        </if>
+        <if test="garbageType != null and garbageType =='gsTotalOther'">
+            sum(gs_total_other)
+        </if>
+        <if test="garbageType != null and garbageType =='gsTotalKitchen'">
+            sum(gs_total_kitchen)
+        </if>
+        <if test="garbageType != null and garbageType =='gsTotalHazardous'">
+            sum(gs_total_hazardous)
+        </if>
+        <if test="garbageType != null and garbageType =='gsTotal'">
+            sum(gs_total)
+        </if>
         FROM
             (
                 SELECT
-                    gs_total
+        <if test="garbageType != null and garbageType =='gsTotalRecyclable'">
+            gs_total_recyclable
+        </if>
+        <if test="garbageType != null and garbageType =='gsTotalOther'">
+            gs_total_other
+        </if>
+        <if test="garbageType != null and garbageType =='gsTotalKitchen'">
+            gs_total_kitchen
+        </if>
+        <if test="garbageType != null and garbageType =='gsTotalHazardous'">
+            gs_total_hazardous
+        </if>
+        <if test="garbageType != null and garbageType =='gsTotal'">
+            gs_total
+        </if>
                 FROM
                     garbage_sorting_info
+                where community = #{community}
                 ORDER BY
                     id DESC
                     LIMIT #{day}) AS g

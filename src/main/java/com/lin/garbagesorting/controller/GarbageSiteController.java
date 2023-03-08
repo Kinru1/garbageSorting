@@ -51,6 +51,7 @@ public class GarbageSiteController {
         return R.success();
     }
 
+
     @ApiOperation(value = "删除垃圾站点", notes = "删除垃圾站点")
     @DeleteMapping("/{id}")
     @SaCheckPermission("garbageSite.delete")
@@ -58,6 +59,7 @@ public class GarbageSiteController {
         garbageSiteService.removeById(id);
         return R.success();
     }
+
 
     @ApiOperation(value = "批量删除垃圾站点", notes = "批量删除垃圾站点")
     @PostMapping("/del/batch")
@@ -67,12 +69,14 @@ public class GarbageSiteController {
         return R.success();
     }
 
+
     @ApiOperation(value = "所有垃圾站点", notes = "所有垃圾站点")
     @GetMapping
     @SaCheckPermission("garbageSite.list")
     public R findAll() {
         return R.success(garbageSiteService.list());
     }
+
 
     @ApiOperation(value = "ID查垃圾站点", notes = "ID查垃圾站点")
     @GetMapping("/{id}")
@@ -81,14 +85,15 @@ public class GarbageSiteController {
         return R.success(garbageSiteService.getById(id));
     }
 
+
     @ApiOperation(value = "分页垃圾站点", notes = "分页垃圾站点")
     @GetMapping("/page")
     @SaCheckPermission("garbageSite.list")
-    public R findPage(@RequestParam(defaultValue = "") String name,
+    public R findPage(@RequestParam(defaultValue = "") String gsLocation,
                            @RequestParam Integer pageNum,
                            @RequestParam Integer pageSize) {
         QueryWrapper<GarbageSite> queryWrapper = new QueryWrapper<GarbageSite>().orderByDesc("id");
-        queryWrapper.like(!"".equals(name), "name", name);
+        queryWrapper.like(!"".equals(gsLocation), "gs_location", gsLocation);
         return R.success(garbageSiteService.page(new Page<>(pageNum, pageSize), queryWrapper));
     }
 

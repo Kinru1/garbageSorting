@@ -88,11 +88,10 @@ public class GarbageSortingInfoController {
 
     @ApiOperation(value="查询最近的垃圾分类", notes = "根据ID查询垃圾分类信息")
     @GetMapping("/selectLast")
-    @SaCheckPermission("garbageSortingInfo.list")
-    public R findLastGarbageInfo(@PathVariable Integer day,String community) {
-
-
-        return null;
+    @SaCheckPermission("garbageSortingInfo.selectLast")
+    public R findLastGarbageInfo(@RequestParam Integer day,@RequestParam String community,@RequestParam String garbageType) {
+        double LastTotalGarbageInfo = garbageSortingInfoService.getLastTotal(day,community,garbageType);
+        return R.success(LastTotalGarbageInfo);
     }
 
 

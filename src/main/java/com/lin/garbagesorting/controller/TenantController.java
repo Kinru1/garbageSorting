@@ -4,15 +4,19 @@ import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import com.lin.garbagesorting.common.R;
+import com.lin.garbagesorting.entity.Office;
 import com.lin.garbagesorting.entity.Tenant;
 import com.lin.garbagesorting.entity.User;
+import com.lin.garbagesorting.service.OfficeService;
 import com.lin.garbagesorting.service.TenantService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,19 +36,35 @@ public class TenantController {
     @Resource
     private TenantService tenantService;
 
-    @ApiOperation(value = "新增业主", notes = "新增业主")
+    @Resource
+    private OfficeService officeService;
+
+
+    @ApiOperation(value = "新增自己小区业主", notes = "新增自己小区业主")
     @PostMapping
-    @SaCheckPermission("tenant.add")
-    public R save(@RequestBody Tenant tenant) {
+    @SaCheckPermission("tenant.myAdd")
+    public R saveTenant(@RequestBody Tenant tenant,@RequestParam String username) {
 //        User user = SessionUtils.getUser();
 //        tenant.setUser(user.getName());
 //        tenant.setUserid(user.getId());
 //        tenant.setDate(DateUtil.today());
 //        tenant.setTime(DateUtil.now());
+        LambdaQueryWrapper<Office> lqWrapper = new LambdaQueryWrapper();
+//        //添加过滤条件
+        lqWrapper.eq(StringUtils.isNotEmpty(username), Office::getOfUsername,username);
         tenantService.save(tenant);
+        tenant.setTenantCommunity(officeService.getOne(lqWrapper).getOfCommunity());
         return R.success();
     }
 
+
+    @ApiOperation(value = "新增业主", notes = "新增业主")
+    @PostMapping
+    @SaCheckPermission("tenant.Add")
+    public R save(@RequestBody Tenant tenant) {
+        tenantService.save(tenant);
+        return R.success();
+    }
 
     @ApiOperation(value = "修改业主", notes = "修改业主")
     @PutMapping
@@ -86,17 +106,40 @@ public class TenantController {
         return R.success(tenantService.getById(id));
     }
 
-    @ApiOperation(value = "分页查询业主", notes = "分页查询业主")
+
+
+
+    @ApiOperation(value = "分页查询自己小区的业主", notes = "分页查询自己小区的业主")
     @GetMapping("/page")
-    @SaCheckPermission("tenant.list")
-    public R findPage(@RequestParam(defaultValue = "") String name,
+    @SaCheckPermission("tenant.myList")
+    public R findPage(@RequestParam String username,@RequestParam(defaultValue = "") String  tenantOwer,
                            @RequestParam Integer pageNum,
                            @RequestParam Integer pageSize) {
         QueryWrapper<Tenant> queryWrapper = new QueryWrapper<Tenant>().orderByDesc("id");
+
+        LambdaQueryWrapper<Office> lqWrapper = new LambdaQueryWrapper();
+//        //添加过滤条件
+        lqWrapper.eq(StringUtils.isNotEmpty(username), Office::getOfUsername,username);
+
+        String community  = officeService.getOne(lqWrapper).getOfCommunity();
         //模糊查询
-        queryWrapper.like(!"".equals(name), "name", name);
+        queryWrapper.like(!"".equals(tenantOwer), "name", tenantOwer).eq("tenant_community",community);
         return R.success(tenantService.page(new Page<>(pageNum, pageSize), queryWrapper));
     }
+
+
+    @ApiOperation(value = "分页查询所有业主", notes = "分页查询所有业主")
+    @GetMapping("/pageALL")
+    @SaCheckPermission("tenant.list")
+    public R findALLPage(@RequestParam(defaultValue = "") String tenantOwer,
+                      @RequestParam Integer pageNum,
+                      @RequestParam Integer pageSize) {
+        QueryWrapper<Tenant> queryWrapper = new QueryWrapper<Tenant>().orderByDesc("id");
+        //模糊查询
+        queryWrapper.like(!"".equals(tenantOwer), "tenant_ower", tenantOwer);
+        return R.success(tenantService.page(new Page<>(pageNum, pageSize), queryWrapper));
+    }
+
 
     @ApiOperation(value = "导出所有业主", notes = "导出所有业主")
     @GetMapping("/export")
