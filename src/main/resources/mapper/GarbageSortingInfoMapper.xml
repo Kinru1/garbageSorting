@@ -43,4 +43,50 @@
                     id DESC
                     LIMIT #{day}) AS g
     </select>
+
+
+
+
+
+    <select id="getAllLastTotal" resultType="double" >
+        SELECT
+        <if test="garbageType != null and garbageType =='gsTotalRecyclable'">
+            sum(gs_total_recyclable)
+        </if>
+        <if test="garbageType != null and garbageType =='gsTotalOther'">
+            sum(gs_total_other)
+        </if>
+        <if test="garbageType != null and garbageType =='gsTotalKitchen'">
+            sum(gs_total_kitchen)
+        </if>
+        <if test="garbageType != null and garbageType =='gsTotalHazardous'">
+            sum(gs_total_hazardous)
+        </if>
+        <if test="garbageType != null and garbageType =='gsTotal'">
+            sum(gs_total)
+        </if>
+        FROM
+        (
+        SELECT
+        <if test="garbageType != null and garbageType =='gsTotalRecyclable'">
+            gs_total_recyclable
+        </if>
+        <if test="garbageType != null and garbageType =='gsTotalOther'">
+            gs_total_other
+        </if>
+        <if test="garbageType != null and garbageType =='gsTotalKitchen'">
+            gs_total_kitchen
+        </if>
+        <if test="garbageType != null and garbageType =='gsTotalHazardous'">
+            gs_total_hazardous
+        </if>
+        <if test="garbageType != null and garbageType =='gsTotal'">
+            gs_total
+        </if>
+        FROM
+        garbage_sorting_info
+        ORDER BY
+        id DESC
+        LIMIT #{day}) AS g
+    </select>
 </mapper>

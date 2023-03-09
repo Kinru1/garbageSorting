@@ -12,6 +12,6 @@ import java.util.List;
 public interface GarbageSortingInfoMapper extends BaseMapper<GarbageSortingInfo> {
 
     double getLastTotal(@Param("day") Integer day, @Param("community") String community, @Param("garbageType") String garbageType);
-
+    double getAllLastTotal(@Param("day") Integer day, @Param("garbageType") String garbageType);
 }
 

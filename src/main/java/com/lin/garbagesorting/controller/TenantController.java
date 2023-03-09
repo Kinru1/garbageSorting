@@ -14,6 +14,7 @@ import com.lin.garbagesorting.entity.Tenant;
 import com.lin.garbagesorting.entity.User;
 import com.lin.garbagesorting.service.OfficeService;
 import com.lin.garbagesorting.service.TenantService;
+import com.lin.garbagesorting.utils.SnowFlake;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -41,19 +42,20 @@ public class TenantController {
 
 
     @ApiOperation(value = "新增自己小区业主", notes = "新增自己小区业主")
-    @PostMapping
+    @PostMapping("/myAdd")
     @SaCheckPermission("tenant.myAdd")
     public R saveTenant(@RequestBody Tenant tenant,@RequestParam String username) {
-//        User user = SessionUtils.getUser();
-//        tenant.setUser(user.getName());
-//        tenant.setUserid(user.getId());
-//        tenant.setDate(DateUtil.today());
-//        tenant.setTime(DateUtil.now());
+
+
         LambdaQueryWrapper<Office> lqWrapper = new LambdaQueryWrapper();
 //        //添加过滤条件
         lqWrapper.eq(StringUtils.isNotEmpty(username), Office::getOfUsername,username);
+
+        String community = officeService.getOne(lqWrapper).getOfCommunity();
+        tenant.setTenantCommunity(community);
+        SnowFlake worker = new SnowFlake(1, 1, 1);
+        tenant.setTenantId(worker.nextId());
         tenantService.save(tenant);
-        tenant.setTenantCommunity(officeService.getOne(lqWrapper).getOfCommunity());
         return R.success();
     }
 

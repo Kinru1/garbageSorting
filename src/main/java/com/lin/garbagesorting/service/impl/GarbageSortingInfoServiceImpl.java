@@ -38,6 +38,11 @@ public class GarbageSortingInfoServiceImpl extends ServiceImpl<GarbageSortingInf
 		double gsi=  garbageSortingInfoMapper.getLastTotal(day,community,garbageType);
 		return gsi;
 	}
+
+	public double getAllLastTotal(Integer day,String garbageType) {
+		double gsi=  garbageSortingInfoMapper.getAllLastTotal(day,garbageType);
+		return gsi;
+	}
 //	public double getLastTotalRecy(Integer day,String community) {
 //		double glr=  garbageSortingInfoMapper.getLastTotal(day,community);
 //		return glr;

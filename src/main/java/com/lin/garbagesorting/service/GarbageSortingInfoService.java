@@ -9,6 +9,8 @@ public interface GarbageSortingInfoService  extends IService<GarbageSortingInfo>
 
     GarbageSortingInfo saveTotal(GarbageSortingInfo garbageSortingInfo);
     double getLastTotal(Integer day,String community,String garbageType);
+
+    double getAllLastTotal(Integer day,String garbageType);
 //    double getLastTotalRecy(Integer day,String community);
 //    double getLastTotalOther(Integer day,String community);
 //    double getLastTotal(Integer day,String community);

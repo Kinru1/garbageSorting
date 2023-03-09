@@ -8,7 +8,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lin.garbagesorting.common.R;
 import com.lin.garbagesorting.entity.GarbageSortingInfo;
+import com.lin.garbagesorting.entity.Office;
 import com.lin.garbagesorting.service.GarbageSortingInfoService;
+import com.lin.garbagesorting.service.OfficeService;
 import com.lin.garbagesorting.utils.SnowFlake;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,6 +31,9 @@ public class GarbageSortingInfoController {
 
     @Resource
     private GarbageSortingInfoService garbageSortingInfoService;
+
+    @Resource
+    private OfficeService officeService;
 
     @ApiOperation(value = "添加垃圾分类信息", notes = "添加垃圾分类信息")
     @PostMapping
@@ -86,7 +91,7 @@ public class GarbageSortingInfoController {
 
 
 
-    @ApiOperation(value="查询最近的垃圾分类", notes = "根据ID查询垃圾分类信息")
+    @ApiOperation(value="查询最近的垃圾分类情况", notes = "查询最近的垃圾分类情况")
     @GetMapping("/selectLast")
     @SaCheckPermission("garbageSortingInfo.selectLast")
     public R findLastGarbageInfo(@RequestParam Integer day,@RequestParam String community,@RequestParam String garbageType) {
@@ -94,20 +99,45 @@ public class GarbageSortingInfoController {
         return R.success(LastTotalGarbageInfo);
     }
 
+    @ApiOperation(value="查询最近的全部垃圾分类情况", notes = "查询最近的全部垃圾分类情况")
+    @GetMapping("/selectAllLast")
+    @SaCheckPermission("garbageSortingInfo.selectAllLast")
+    public R getAllLastTotal(@RequestParam Integer day,@RequestParam String garbageType) {
+        double LastTotalGarbageInfo = garbageSortingInfoService.getAllLastTotal(day,garbageType);
+        return R.success(LastTotalGarbageInfo);
+    }
 
 
 
 
-    @ApiOperation(value = "分页垃圾分类信息", notes = "分页垃圾分类信息")
+    @ApiOperation(value = "分页小区垃圾分类信息", notes = "分页小区垃圾分类信息")
     @GetMapping("/page")
-    @SaCheckPermission("garbageSortingInfo.list")
-    public R findPage(@RequestParam(defaultValue = "") String name,
+    @SaCheckPermission("garbageSortingInfo.myLlst")
+    public R findPage(@RequestParam(defaultValue = "") String name,@RequestParam String username,
                            @RequestParam Integer pageNum,
                            @RequestParam Integer pageSize) {
+        QueryWrapper<GarbageSortingInfo> queryWrapper = new QueryWrapper<GarbageSortingInfo>().orderByDesc("id");
+        QueryWrapper<Office> queryWrapper2 = new QueryWrapper();
+        queryWrapper2.eq("of_username",username);
+        queryWrapper.eq("community",officeService.getOne(queryWrapper2).getOfCommunity());
+
+        queryWrapper.like(!"".equals(name), "name", name);
+        return R.success(garbageSortingInfoService.page(new Page<>(pageNum, pageSize), queryWrapper));
+    }
+
+
+    @ApiOperation(value = "分页全部垃圾分类信息", notes = "分页全部垃圾分类信息")
+    @GetMapping("/allPage")
+    @SaCheckPermission("garbageSortingInfo.list")
+    public R findAllPage(@RequestParam(defaultValue = "") String name,
+                      @RequestParam Integer pageNum,
+                      @RequestParam Integer pageSize) {
         QueryWrapper<GarbageSortingInfo> queryWrapper = new QueryWrapper<GarbageSortingInfo>().orderByDesc("id");
         queryWrapper.like(!"".equals(name), "name", name);
         return R.success(garbageSortingInfoService.page(new Page<>(pageNum, pageSize), queryWrapper));
     }
+
+
 
 
     @ApiOperation(value = "导出垃圾分类信息", notes = "导出垃圾分类信息")

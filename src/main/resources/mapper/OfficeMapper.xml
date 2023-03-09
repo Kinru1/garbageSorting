@@ -11,4 +11,14 @@
             of_username = #{username}
           AND o.of_community = t.tenant_community
     </select>
+    <insert id="insertByOffice" >
+        insert
+
+      into
+        user
+set <if test="phone != null and phone !==''">>
+        set phone = #{phone} and
+</if>
+            username= #{username} and type =2
+    </insert>
 </mapper>

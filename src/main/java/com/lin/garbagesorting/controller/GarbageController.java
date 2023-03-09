@@ -88,11 +88,11 @@ public class GarbageController {
     @ApiOperation(value = "分页查询垃圾", notes = "分页查询垃圾")
     @GetMapping("/page")
     @SaCheckPermission("garbage.list")
-    public R findPage(@RequestParam(defaultValue = "") String name,
+    public R findPage(@RequestParam(defaultValue = "") String garbageName,
                            @RequestParam Integer pageNum,
                            @RequestParam Integer pageSize) {
         QueryWrapper<Garbage> queryWrapper = new QueryWrapper<Garbage>().orderByDesc("id");
-        queryWrapper.like(!"".equals(name), "name", name);
+        queryWrapper.like(!"".equals(garbageName), "name", garbageName);
         return R.success(garbageService.page(new Page<>(pageNum, pageSize), queryWrapper));
     }
 

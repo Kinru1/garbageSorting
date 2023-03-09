@@ -20,7 +20,7 @@ public class Office  implements Serializable {
 	private Long ofId;
 
 	@ApiModelProperty(value="物业电话", hidden=false, required=false, dataType="Integer", example = "")
-	private Integer ofPhone;
+	private String ofPhone;
 
 	@ApiModelProperty(value="物业用户名", hidden=false, required=false, dataType="String", example = "")
 	private String ofUsername;

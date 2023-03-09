@@ -4,14 +4,21 @@ import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lin.garbagesorting.common.R;
 import com.lin.garbagesorting.entity.Office;
 import com.lin.garbagesorting.entity.Tenant;
+import com.lin.garbagesorting.entity.User;
 import com.lin.garbagesorting.service.OfficeService;
+import com.lin.garbagesorting.service.UserService;
+import com.lin.garbagesorting.utils.SnowFlake;
+import com.lin.garbagesorting.utils.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,18 +37,35 @@ public class OfficeController {
     @Resource
     private OfficeService officeService;
 
+    @Resource
+    private UserService userService;
+
+
     @ApiOperation(value = "新增物业", notes = "新增物业")
     @PostMapping
     @SaCheckPermission("office.add")
-    public R save(@RequestBody Office office) {
-//        User user = SessionUtils.getUser();
-//        office.setUser(user.getName());
-//        office.setUserid(user.getId());
-//        office.setDate(DateUtil.today());
-//        office.setTime(DateUtil.now());
-        officeService.save(office);
-        return R.success();
-    }
+    public R save(@RequestBody Office office) throws TooManyResultsException {
+        QueryWrapper<User> QueryWrapper = new QueryWrapper<>();
+        QueryWrapper.eq("username", office.getOfUsername());
+
+        try {
+            StringUtil.isNotNull(userService.getOne(QueryWrapper));
+
+        } catch (Exception e) {
+            return  R.error("该用户已存在");
+        }
+
+            if (StringUtil.isNotEmpty(office.getOfPhone())) {
+                userService.save(officeService.insertByOffice(office.getOfPhone(), office.getOfUsername()));
+            } else {
+                userService.save(officeService.insertByOffice(null, office.getOfUsername()));
+            }
+
+            SnowFlake worker = new SnowFlake(1, 1, 1);
+            office.setOfId(worker.nextId());
+            officeService.save(office);
+            return R.success();
+        }
 
 
     @ApiOperation(value = "修改物业", notes = "修改物业")
@@ -60,7 +84,7 @@ public class OfficeController {
         return R.success();
     }
 
-    @ApiOperation(value = "删除物业", notes = "删除物业")
+    @ApiOperation(value = "批量删除物业", notes = "批量删除物业")
     @PostMapping("/del/batch")
     @SaCheckPermission("office.deleteBatch")
     public R deleteBatch(@RequestBody List<Integer> ids) {

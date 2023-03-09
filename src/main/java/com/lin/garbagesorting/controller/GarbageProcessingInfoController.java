@@ -9,7 +9,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lin.garbagesorting.common.R;
 import com.lin.garbagesorting.entity.GarbageProcessingInfo;
+import com.lin.garbagesorting.entity.Office;
 import com.lin.garbagesorting.service.GarbageProcessingInfoService;
+import com.lin.garbagesorting.service.OfficeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +34,14 @@ public class GarbageProcessingInfoController {
 
     @Resource
     private GarbageProcessingInfoService garbageProcessingInfoService;
+
+
+
+
+    @Resource
+    private OfficeService officeService;
+
+
 
     @ApiOperation(value = "新增垃圾处理信息", notes = "新增垃圾处理信息")
     @PostMapping
@@ -91,14 +101,27 @@ public class GarbageProcessingInfoController {
     }
 
 
+//    @ApiOperation(value = "垃圾自己小区处理信息分页", notes = "垃圾自己小区处理信息分页")
+//    @GetMapping("/page")
+//    @SaCheckPermission("garbageProcessingInfo.list")
+//    public R findPage(@RequestParam(defaultValue = "") String username,
+//                           @RequestParam Integer pageNum,
+//                           @RequestParam Integer pageSize) {
+//        QueryWrapper<GarbageProcessingInfo> queryWrapper = new QueryWrapper<GarbageProcessingInfo>().orderByDesc("id");
+//        QueryWrapper<Office> qw2 = new QueryWrapper()
+//        String community = officeService.getOne(qw2.eq("of_username",username)).getOfCommunity();
+//        queryWrapper.like(!"".equals(name), "name", name);
+//        return R.success(garbageProcessingInfoService.page(new Page<>(pageNum, pageSize), queryWrapper));
+//    }
+
     @ApiOperation(value = "垃圾处理信息分页", notes = "垃圾处理信息分页")
-    @GetMapping("/page")
-    @SaCheckPermission("garbageProcessingInfo.list")
-    public R findPage(@RequestParam(defaultValue = "") String name,
-                           @RequestParam Integer pageNum,
-                           @RequestParam Integer pageSize) {
+    @GetMapping("/allPage")
+    @SaCheckPermission("garbageProcessingInfo.allList")
+    public R findAllPage(@RequestParam(defaultValue = "") String community,
+                      @RequestParam Integer pageNum,
+                      @RequestParam Integer pageSize) {
         QueryWrapper<GarbageProcessingInfo> queryWrapper = new QueryWrapper<GarbageProcessingInfo>().orderByDesc("id");
-        queryWrapper.like(!"".equals(name), "name", name);
+        queryWrapper.like(!"".equals(community), "name", community);
         return R.success(garbageProcessingInfoService.page(new Page<>(pageNum, pageSize), queryWrapper));
     }
 

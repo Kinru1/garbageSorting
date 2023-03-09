@@ -11,10 +11,7 @@ import com.lin.garbagesorting.common.R;
 import com.lin.garbagesorting.dto.UserDto;
 import com.lin.garbagesorting.entity.*;
 import com.lin.garbagesorting.mapper.UserMapper;
-import com.lin.garbagesorting.service.OperationService;
-import com.lin.garbagesorting.service.RoleOperationService;
-import com.lin.garbagesorting.service.RoleService;
-import com.lin.garbagesorting.service.UserService;
+import com.lin.garbagesorting.service.*;
 import com.lin.garbagesorting.utils.SHAUtil;
 import com.lin.garbagesorting.utils.SnowFlake;
 import com.lin.garbagesorting.utils.StringUtil;
@@ -76,6 +73,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
     @Resource
     OperationService operationService;
 
+    @Resource
+    TenantService tenantService;
+
+    @Resource
+    OfficeService officeService;
     @Override
 public UserVo login(User user) {
     User users;
@@ -95,9 +97,9 @@ public UserVo login(User user) {
 //            throw new ServiceException("用户名或密码错误");
 //        }
    // if (!BCrypt.checkpw(user.getPassword(), dbUser.getPassword()))
-        if (!user.getPassword().equals(users.getPassword()))
+        if (!SHAUtil.SHA256Encrypt(user.getPassword()).equals(users.getPassword()))
     {
-        throw new RuntimeException("用户名或密码错误");
+        throw new RuntimeException("密码错误");
     }
     // 登录
    // StpUtil.login(dbUser.getUserId());  // loginId
@@ -112,6 +114,7 @@ public UserVo login(User user) {
     List<Operation> auths = all.stream().filter(Operation -> Operation.getType() == 3).collect(Collectors.toList());
     return UserVo.builder().user(users).menus(menus).auths(auths).build();
 }
+
 
     @Override
     public void updatePassword(UserDto userDto) throws Exception {
@@ -130,10 +133,10 @@ public UserVo login(User user) {
     }
     public User insertUser(User user) {
         // 设置昵称
-        if (StringUtil.isNotEmpty(user.getUsername())) {
-            user.setName("用户" + RandomStringUtils.randomAlphabetic(6));
+        if (!StringUtil.isNotEmpty(user.getUsername())) {
+            user.setUsername("用户" + RandomStringUtils.randomAlphabetic(6));
         }
-        if (StringUtil.isNotEmpty(user.getPassword())) {
+        if (!StringUtil.isNotEmpty(user.getPassword())) {
             user.setPassword(
                     SHAUtil.SHA256Encrypt("123456")); // 加密用户密码
         }
@@ -145,9 +148,13 @@ public UserVo login(User user) {
             if(user.getType()==1){
                 Tenant tenant= new Tenant();
                 tenant.setTenantUsername(user.getUsername());
+                tenant.setTenantId(worker.nextId());
+                tenantService.save(tenant);
             }else if(user.getType()==2){
                 Office office = new Office();
                 office.setOfUsername(user.getUsername());
+                office.setOfId(worker.nextId());
+                officeService.save(office);
             }else {
                 System.out.println("管理员");
             }

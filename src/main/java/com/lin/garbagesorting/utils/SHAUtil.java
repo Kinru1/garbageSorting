@@ -40,7 +40,6 @@ public class SHAUtil {
         }
 
 
-
         //SHA-256加密
         public static String SHA256Encrypt(String sourceStr) {
             MessageDigest md = null;

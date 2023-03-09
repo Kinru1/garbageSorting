@@ -52,7 +52,7 @@ public class AnnouncementController {
 
 
     @ApiOperation(value = "新增公告", notes = "新增公告")
-    @PostMapping
+    @PostMapping("/myAdd")
     @SaCheckPermission("announcement.myAdd")
     public R save(@RequestBody Announcement announcement,@RequestParam String username) {
         LambdaQueryWrapper<Office> lqWrapper = new LambdaQueryWrapper();

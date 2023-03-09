@@ -14,8 +14,8 @@ public class Tenant implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@ApiModelProperty(value="", hidden=false, required=true, dataType="Integer", example = "")
-	private Integer tenantId;
+	@ApiModelProperty(value="", hidden=false, required=true)
+	private Long tenantId;
 
 	@ApiModelProperty(value="业主家庭住址", hidden=false, required=false, dataType="String", example = "")
 	private String tenantLocation;

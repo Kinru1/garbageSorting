@@ -182,12 +182,18 @@ public R update(@RequestBody User user) {
     @SaCheckPermission("user.list")
     public R findPage(@RequestParam(defaultValue = "") String username,
                            @RequestParam Integer pageNum,
-                           @RequestParam Integer pageSize) {
+                           @RequestParam Integer pageSize)
+    {
         QueryWrapper<User> queryWrapper = new QueryWrapper<User>().orderByDesc("id");
         queryWrapper.like(StrUtil.isNotBlank(username), "name", username);
         // and
         return R.success(userService.page(new Page<>(pageNum, pageSize), queryWrapper));
     }
+
+
+
+
+
 
 
     /**
@@ -216,18 +222,28 @@ public R update(@RequestBody User user) {
     }
 
 
+
+
+
+
     @PostMapping
     @ApiOperation(value = "新增用户", notes = "新增用户")
     public R saveUser(@RequestBody User user){
-        LambdaQueryWrapper<User> qWrapper = new LambdaQueryWrapper();
-        if(StringUtils.isNotEmpty(user.getUsername())){
-            if(StringUtil.isNotNull(qWrapper.eq(User::getUsername,user.getUsername()))){
+            LambdaQueryWrapper<User> qWrapper = new LambdaQueryWrapper();
+            qWrapper.eq(User::getUsername,user.getUsername());
+
+            if(StringUtil.isNotNull(userService.getOne(qWrapper))){
                 return  R.error("新增失败,用户名已存在");
             }else{
                 userService.insertUser(user);
             }
-        }
+
         return R.success();
+
+
+
+
+
 }@PostMapping("change")
     public R passwordChange(@RequestBody UserDto userDto) throws Exception {
         userService.updatePassword(userDto);

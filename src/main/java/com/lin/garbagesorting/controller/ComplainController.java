@@ -98,12 +98,28 @@ public class ComplainController {
 
 
 
-    @ApiOperation(value = "分页投诉", notes = "分页投诉")
+    @ApiOperation(value = "分页所有投诉", notes = "分页所有投诉")
+    @GetMapping("/allPage")
+    @SaCheckPermission("complain.allList")
+    public R findPage(@RequestParam(defaultValue = "") String content,
+                           @RequestParam Integer pageNum,
+                           @RequestParam Integer pageSize) {
+        QueryWrapper<Complain> queryWrapper = new QueryWrapper<Complain>().orderByDesc("id");
+        QueryWrapper<Office> queryWrapper2 = new QueryWrapper();
+
+        queryWrapper.like(!"".equals(content), "content", content);
+
+        return R.success(complainService.page(new Page<>(pageNum, pageSize), queryWrapper));
+    }
+
+
+
+    @ApiOperation(value = "分页自己小区投诉", notes = "分页自己小区投诉")
     @GetMapping("/page")
     @SaCheckPermission("complain.list")
     public R findPage(@RequestParam(defaultValue = "") String content,@RequestParam String username,
-                           @RequestParam Integer pageNum,
-                           @RequestParam Integer pageSize) {
+                      @RequestParam Integer pageNum,
+                      @RequestParam Integer pageSize) {
         QueryWrapper<Complain> queryWrapper = new QueryWrapper<Complain>().orderByDesc("id");
         QueryWrapper<Office> queryWrapper2 = new QueryWrapper();
 
@@ -113,6 +129,11 @@ public class ComplainController {
 
         return R.success(complainService.page(new Page<>(pageNum, pageSize), queryWrapper));
     }
+
+
+
+
+
 
     @ApiOperation(value = "导出投诉", notes = "导出投诉")
     @GetMapping("/export")
