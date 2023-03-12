@@ -36,4 +36,6 @@ public class Challenge implements Serializable {
 	@ApiModelProperty(value="是否删除", hidden=false, required=false, dataType="Date", example = "")
 	private int logDelete;
 
+	@ApiModelProperty(value="垃圾图片", hidden=false, required=false, dataType="String", example = "")
+	private String garbageImg;
 }

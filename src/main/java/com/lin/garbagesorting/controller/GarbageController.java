@@ -11,15 +11,22 @@ import com.lin.garbagesorting.entity.Garbage;
 import com.lin.garbagesorting.service.GarbageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Base64;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+@Slf4j
 @Api(tags = "垃圾管理")
 @RestController
 @RequestMapping("/garbage")
@@ -40,6 +47,11 @@ public class GarbageController {
 //        garbage.setTime(DateUtil.now());
         garbageService.save(garbage);
         return R.success();
+    }
+    @GetMapping("/type")
+    @SaCheckPermission("garbage.type")
+    public List<Map<String, Object>> getGarbageByType() {
+        return garbageService.getGarbageList();
     }
 
     @ApiOperation(value = "修改垃圾", notes = "修改垃圾")
@@ -62,7 +74,6 @@ public class GarbageController {
 
 
 
-
     @ApiOperation(value = "批量删除垃圾", notes = "批量删除垃圾")
     @PostMapping("/del/batch")
     @SaCheckPermission("garbage.deleteBatch")
@@ -75,6 +86,15 @@ public class GarbageController {
     @GetMapping
     @SaCheckPermission("garbage.list")
     public R findAll() {
+        List<Garbage>  garbage= garbageService.list();
+        //       List<Garbage> garbageList = garbage.stream()
+        List<Garbage> modifiedList = garbageService.list().stream()
+                .map(obj -> {
+                    // 对象的属性进行替换
+                    log.info(obj.getGarbageImg());
+                    return obj;
+                })
+                .collect(Collectors.toList());
         return R.success(garbageService.list());
     }
 
@@ -138,5 +158,9 @@ public class GarbageController {
         garbageService.saveBatch(list);
         return R.success();
     }
+
+
+
+
 
 }

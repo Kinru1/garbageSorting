@@ -2,7 +2,9 @@ package com.lin.garbagesorting.entity;
 
 
 import cn.hutool.core.annotation.Alias;
+import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -20,8 +22,9 @@ public class Announcement  implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@TableField(fill = FieldFill.INSERT) //插入和更新时填充字段
+	@JSONField(format="yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	@ApiModelProperty(value="创建时间", hidden=false, required=false, dataType="Date", example = "")
-
 	private LocalDateTime createTime;
 
 	@ApiModelProperty(value="公告类型", hidden=false, required=false, dataType="String", example = "")
