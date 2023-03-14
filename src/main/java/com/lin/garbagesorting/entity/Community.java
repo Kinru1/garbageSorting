@@ -1,6 +1,8 @@
 package com.lin.garbagesorting.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -19,7 +21,7 @@ public class Community  implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@ApiModelProperty(value="小区ID", hidden=false, required=true, dataType="Integer", example = "")
-	private Integer comId;
+	private Long comId;
 
 	@ApiModelProperty(value="小区名", hidden=false, required=false, dataType="String", example = "")
 	private String comName;
@@ -33,10 +35,15 @@ public class Community  implements Serializable {
 	@ApiModelProperty(value="小区电话", hidden=false, required=false, dataType="Integer", example = "")
 	private Integer comPhone;
 
+	@JSONField(format="yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	@TableField(fill = FieldFill.INSERT)
 	@ApiModelProperty(value="创建时间", hidden=false, required=false, dataType="Date", example = "")
 	private LocalDateTime createTime;
 
+
+	@JSONField(format="yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	@TableField(fill = FieldFill.INSERT_UPDATE) //插入和更新时填充字段
 	@ApiModelProperty(value="修改时间", hidden=false, required=false, dataType="Date", example = "")
 	private LocalDateTime updateTime;

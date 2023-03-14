@@ -1,7 +1,9 @@
 package com.lin.garbagesorting.entity;
 
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -38,10 +40,16 @@ public class User implements Serializable {
 	@ApiModelProperty(value="状态：1为正常 2为禁用", hidden=false, required=true, dataType="Integer", example = "")
 	private Integer status;
 
+
+	@JSONField(format="yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	@TableField(fill = FieldFill.INSERT) //插入时填充字段
 	@ApiModelProperty(value="创建时间", hidden=false, required=true, dataType="Date", example = "")
 	private LocalDateTime createTime;
 
+
+	@JSONField(format="yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	@TableField(fill = FieldFill.INSERT_UPDATE) //插入和更新时填充字段
 	@ApiModelProperty(value="更新时间", hidden=false, required=true, dataType="Date", example = "")
 	private LocalDateTime updateTime;

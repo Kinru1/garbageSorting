@@ -40,6 +40,8 @@ public class R implements Serializable {
         this.data = data;
     }
 
+    public R(int codeSuccess) {
+    }
 
 
     public static R success()
@@ -48,6 +50,9 @@ public class R implements Serializable {
     }
     public static R suc(Object data) {
         return new R(CODE_SUCCESS, true,"操作成功", data);
+    }
+    public static R suc(int code) {
+        return new R(CODE_SUCCESS);
     }
     public static R success(String msg)
     {

@@ -1,7 +1,9 @@
 package com.lin.garbagesorting.entity;
 
 import cn.hutool.core.annotation.Alias;
+import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -39,7 +41,8 @@ public class Complain implements Serializable {
 	@Alias("投诉图片")
 	private String img;
 
-	// 投诉图片
+	@JSONField(format="yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	@TableField(fill = FieldFill.INSERT) //插入和更新时填充字段
 	@ApiModelProperty("投诉时间")
 	private String date;

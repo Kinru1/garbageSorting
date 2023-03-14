@@ -116,7 +116,7 @@ public class ComplainController {
 
     @ApiOperation(value = "分页自己小区投诉", notes = "分页自己小区投诉")
     @GetMapping("/page")
-    @SaCheckPermission("complain.list")
+    @SaCheckPermission("complain.mylist")
     public R findPage(@RequestParam(defaultValue = "") String content,@RequestParam String username,
                       @RequestParam Integer pageNum,
                       @RequestParam Integer pageSize) {

@@ -1,5 +1,7 @@
 package com.lin.garbagesorting.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -22,6 +24,8 @@ public class ChallengeResult  implements Serializable {
 	@ApiModelProperty(value="得分", hidden=false, required=false, dataType="Integer", example = "")
 	private Integer score;
 
+	@JSONField(format="yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	@ApiModelProperty(value="挑战时间", hidden=false, required=false, dataType="Date", example = "")
 	private LocalDateTime challengeTime;
 

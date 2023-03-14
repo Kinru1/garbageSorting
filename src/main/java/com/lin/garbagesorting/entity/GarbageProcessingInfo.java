@@ -36,6 +36,7 @@ public class GarbageProcessingInfo  implements Serializable {
 
 
 	@JSONField(format="yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime gpDay;
 
 	@ApiModelProperty(value="垃圾总量", hidden=false, required=false, dataType="null", example = "")

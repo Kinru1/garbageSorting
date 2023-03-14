@@ -34,11 +34,7 @@ public class GarbageSiteController {
     @PostMapping
     @SaCheckPermission("garbageSite.add")
     public R save(@RequestBody GarbageSite garbageSite) {
-//        User user = SessionUtils.getUser();
-//        garbageSite.setUser(user.getName());
-//        garbageSite.setUserid(user.getId());
-//        garbageSite.setDate(DateUtil.today());
-//        garbageSite.setTime(DateUtil.now());
+
         garbageSiteService.save(garbageSite);
         return R.success();
     }

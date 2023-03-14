@@ -40,11 +40,6 @@ public class GarbageController {
     @PostMapping
     @SaCheckPermission("garbage.add")
     public R save(@RequestBody Garbage garbage) {
-//        User user = SessionUtils.getUser();
-//        garbage.setUser(user.getName());
-//        garbage.setUserid(user.getId());
-//        garbage.setDate(DateUtil.today());
-//        garbage.setTime(DateUtil.now());
         garbageService.save(garbage);
         return R.success();
     }
@@ -82,6 +77,7 @@ public class GarbageController {
         return R.success();
     }
 
+
     @ApiOperation(value = "所有垃圾", notes = "所有垃圾")
     @GetMapping
     @SaCheckPermission("garbage.list")
@@ -97,6 +93,7 @@ public class GarbageController {
                 .collect(Collectors.toList());
         return R.success(garbageService.list());
     }
+
 
     @ApiOperation(value = "精准查询垃圾", notes = "精准查询垃圾")
     @GetMapping("/{id}")

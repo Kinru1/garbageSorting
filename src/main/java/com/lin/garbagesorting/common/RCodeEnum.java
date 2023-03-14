@@ -1,7 +1,7 @@
 package com.lin.garbagesorting.common;
 
 public enum RCodeEnum {
-    success(0, "操作成功"),
+    success(200, "操作成功"),
     sysError(500, "操作失败"),
     unLogin(401, "您还未登录"),
     unPermission(403, "您没有权限访问");

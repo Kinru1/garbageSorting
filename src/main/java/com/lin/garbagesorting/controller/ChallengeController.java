@@ -35,11 +35,6 @@ public class ChallengeController {
     @PostMapping
     @SaCheckPermission("challenge.add")
     public R save(@RequestBody Challenge challenge) {
-//        User user = SessionUtils.getUser();
-//        challenge.setUser(user.getName());
-//        challenge.setUserid(user.getId());
-//        challenge.setDate(DateUtil.today());
-//        challenge.setTime(DateUtil.now());
         challengeService.save(challenge);
         return R.success();
     }

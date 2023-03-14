@@ -65,7 +65,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = RuntimeException.class)
     public R RuntimeException(Exception e) {
         log.error("运行异常", e);
-        return R.error("账号或密码错误");
+        return R.error("运行异常");
     }
     @ExceptionHandler(NullPointerException.class)
     public R handleTypeMismatchException(NullPointerException ex) {

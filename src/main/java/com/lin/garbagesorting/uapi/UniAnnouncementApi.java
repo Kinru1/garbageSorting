@@ -55,9 +55,10 @@ public class UniAnnouncementApi {
 
     @ApiOperation(value = "查询ID公告", notes = "ID查询公告")
     @GetMapping("/{id}")
-    @SaCheckPermission("announcement.list")
-    public R findOne(@PathVariable Integer id) {
-        return R.success(announcementService.getById(id));
+    @SaCheckPermission("uniAnnouncement.getID")
+    public Announcement findOne(@PathVariable Integer id) {
+        Announcement announcement = announcementService.getById(id);
+        return announcement;
     }
 
 

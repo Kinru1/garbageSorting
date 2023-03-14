@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lin.garbagesorting.common.R;
 import com.lin.garbagesorting.entity.Community;
 import com.lin.garbagesorting.service.CommunityService;
+import com.lin.garbagesorting.utils.SnowFlake;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -31,10 +32,13 @@ public class CommunityController {
     @Resource
     private CommunityService communityService;
 
+
     @ApiOperation(value = "新增小区", notes = "新增小区")
     @PostMapping
     @SaCheckPermission("community.add")
     public R save(@RequestBody Community community) {
+        SnowFlake worker = new SnowFlake(1, 1, 1);
+        community.setComId(worker.nextId());
         communityService.save(community);
         return R.success();
     }
@@ -60,16 +64,24 @@ public class CommunityController {
     @SaCheckPermission("community.deleteBatch")
     public R deleteBatch(@RequestBody List<Integer> ids) {
         communityService.removeByIds(ids);
-        return R.success();
+        return R.suc(200);
     }
 
-    @ApiOperation(value = "所有小区", notes = "所有小区")
-    @GetMapping
+//    @ApiOperation(value = "所有小区", notes = "所有小区")
+//    @GetMapping("/all")
+//    @SaCheckPermission("community.list")
+//    public  List<Community> findAll() {
+//        List<Community> com= communityService.list();
+//        return com;
+//    }
+
+        @ApiOperation(value = "所有小区", notes = "所有小区")
+    @GetMapping("/all")
     @SaCheckPermission("community.list")
-    public R findAll() {
-        return R.success(communityService.list());
+    public  R findAll() {
+        List<Community> com= communityService.list();
+        return R.success(com);
     }
-
     @ApiOperation(value = "精准查询小区", notes = "精准查询小区")
     @GetMapping("/{id}")
     @SaCheckPermission("community.list")
@@ -81,13 +93,14 @@ public class CommunityController {
     @ApiOperation(value = "分页查询小区", notes = "分页查询小区")
     @GetMapping("/page")
     @SaCheckPermission("community.list")
-    public R findPage(@RequestParam(defaultValue = "") String name,
+    public R findPage(@RequestParam(defaultValue = "") String comName,
                            @RequestParam Integer pageNum,
                            @RequestParam Integer pageSize) {
         QueryWrapper<Community> queryWrapper = new QueryWrapper<Community>().orderByDesc("id");
-        queryWrapper.like(!"".equals(name), "name", name);
+        queryWrapper.like(!"".equals(comName), "com_name", comName);
         return R.success(communityService.page(new Page<>(pageNum, pageSize), queryWrapper));
     }
+
 
     /**
     * 导出接口

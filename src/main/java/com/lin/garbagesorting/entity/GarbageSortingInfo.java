@@ -46,6 +46,7 @@ public class GarbageSortingInfo implements Serializable {
 	private double gsTotal;
 
 	@JSONField(format="yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	@ApiModelProperty("创建时间")
 	private LocalDateTime createTime;
 
