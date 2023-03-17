@@ -45,16 +45,14 @@ public class GarbageProcessingInfoServiceImpl extends ServiceImpl<GarbageProcess
 		garbageProcessingInfo.setGpComunity(office.getOfCommunity());
 		SnowFlake worker = new SnowFlake(1, 1, 1);
 		garbageProcessingInfo.setGpId(worker.nextId());
-		GarbageProcessingInfo gpi;
-		QueryWrapper<GarbageSortingInfo> Wrapper = new QueryWrapper();
+//		QueryWrapper<GarbageSortingInfo> Wrapper = new QueryWrapper();
+//
+//		LocalDateTime gpDay = garbageProcessingInfo.getGpDay();
+//		String convertTime = LocalDateTimeConvertUtils.Convert(gpDay);
 
-		LocalDateTime gpDay = garbageProcessingInfo.getGpDay();
-		String convertTime = LocalDateTimeConvertUtils.Convert(gpDay);
-
-
-		Wrapper.like("create_time",convertTime).eq("community",office.getOfCommunity());
-		GarbageSortingInfo gsi = garbageSortingInfoMapper.selectOne(Wrapper);
-		garbageProcessingInfo.setGpTotal(gsi.getGsTotal());
+//		Wrapper.like("create_time",convertTime).eq("community",office.getOfCommunity());
+//		GarbageSortingInfo gsi = garbageSortingInfoMapper.selectOne(Wrapper);
+//		garbageProcessingInfo.setGpTotal(gsi.getGsTotal());
 
 		return garbageProcessingInfo;
 	}

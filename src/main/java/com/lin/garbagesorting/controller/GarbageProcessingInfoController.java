@@ -16,6 +16,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.manager.util.SessionUtils;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,19 +25,19 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.net.URLEncoder;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-
 @Slf4j
 @RestController
 @RequestMapping("/garbageProcessingInfo")
+@CrossOrigin
 @Api(tags = "垃圾处理信息管理")
 public class GarbageProcessingInfoController {
 
     @Resource
     private GarbageProcessingInfoService garbageProcessingInfoService;
-
-
-
 
     @Resource
     private OfficeService officeService;
@@ -45,15 +46,17 @@ public class GarbageProcessingInfoController {
 
     @ApiOperation(value = "新增垃圾处理信息", notes = "新增垃圾处理信息")
     @PostMapping
-    @SaCheckPermission("garbageProcessingInfo.add")
-    public R save(@RequestBody GarbageProcessingInfo garbageProcessingInfo,@RequestParam String username) {
-          //User user = StpUtil.getSession().get(LOGIN_USER_KEY);
-//        garbageProcessingInfo.setUser(user.getName());
-//        garbageProcessingInfo.setUserid(user.getId());
-//        garbageProcessingInfo.setDate(DateUtil.today());
-//        garbageProcessingInfo.setTime(DateUtil.now());
-        log.info(garbageProcessingInfo.toString());
+    @SaCheckPermission("garbageProcessingInfo.addMy")
+    public R saveMy(@RequestBody GarbageProcessingInfo garbageProcessingInfo) {
+        String username = garbageProcessingInfo.getUsername();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+       LocalDate date = LocalDate.parse(garbageProcessingInfo.getDate(), formatter);
+        log.info(username);
+        // 将 LocalDate 转换为 LocalDateTime，时间部分设置为午夜（00:00:00）
+        LocalDateTime dateTime = date.atStartOfDay();
+
         GarbageProcessingInfo gpi= garbageProcessingInfoService.selectGPI(garbageProcessingInfo,username);
+        gpi.setGpDay(dateTime);
         garbageProcessingInfoService.save(gpi);
         return R.success();
     }
@@ -101,21 +104,23 @@ public class GarbageProcessingInfoController {
     }
 
 
-//    @ApiOperation(value = "垃圾自己小区处理信息分页", notes = "垃圾自己小区处理信息分页")
-//    @GetMapping("/page")
-//    @SaCheckPermission("garbageProcessingInfo.list")
-//    public R findPage(@RequestParam(defaultValue = "") String username,
-//                           @RequestParam Integer pageNum,
-//                           @RequestParam Integer pageSize) {
-//        QueryWrapper<GarbageProcessingInfo> queryWrapper = new QueryWrapper<GarbageProcessingInfo>().orderByDesc("id");
-//        QueryWrapper<Office> qw2 = new QueryWrapper()
-//        String community = officeService.getOne(qw2.eq("of_username",username)).getOfCommunity();
-//        queryWrapper.like(!"".equals(name), "name", name);
-//        return R.success(garbageProcessingInfoService.page(new Page<>(pageNum, pageSize), queryWrapper));
-//    }
-
     @ApiOperation(value = "垃圾处理信息分页", notes = "垃圾处理信息分页")
-    @GetMapping("/allPage")
+    @GetMapping("/myPage")
+    @SaCheckPermission("garbageProcessingInfo.list")
+    public R findPage(@RequestParam(defaultValue = "") String username,
+                           @RequestParam Integer pageNum,
+                           @RequestParam Integer pageSize) {
+        QueryWrapper<GarbageProcessingInfo> queryWrapper = new QueryWrapper<GarbageProcessingInfo>().orderByDesc("id");
+        QueryWrapper<Office> qw2 = new QueryWrapper();
+        String community = officeService.getOne(qw2.eq("of_username",username)).getOfCommunity();
+        queryWrapper.like(!"".equals(username), "name", username).eq("gp_community",community);
+        return R.success(garbageProcessingInfoService.page(new Page<>(pageNum, pageSize), queryWrapper));
+    }
+
+
+    @ApiOperation(value = "垃圾自己小区处理信息分页", notes = "垃圾自己小区处理信息分页")
+
+    @GetMapping("/page")
     @SaCheckPermission("garbageProcessingInfo.allList")
     public R findAllPage(@RequestParam(defaultValue = "") String community,
                       @RequestParam Integer pageNum,

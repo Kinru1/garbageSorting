@@ -43,6 +43,10 @@ public class R implements Serializable {
     public R(int codeSuccess) {
     }
 
+    public   static  R successCode(int codeSuccess) {
+        return new R(codeSuccess);
+    }
+
 
     public static R success()
     {
