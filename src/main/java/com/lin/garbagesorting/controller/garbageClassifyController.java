@@ -44,7 +44,7 @@ public class garbageClassifyController {
     @SaCheckPermission("garbageClassify.c")
     public ClassifyingRubbishResponseBody garbageClassify(@RequestParam(required = false) MultipartFile file) throws Exception {
         InputStream inputStream = file.getInputStream();
-        com.aliyun.imagerecog20190930.Client client = garbageClassifyController.createClient("");
+       
 
         // 场景二，使用任意可访问的url
        // URL url = new URL("https://viapi-test-bj.oss-cn-beijing.aliyuncs.com/viapi-3.0domepic/imagerecog/ClassifyingRubbish/ClassifyingRubbish1.jpg");
